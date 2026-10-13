@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:40:27.278167-05:00",
+ "generated": "2026-10-13T04:40:43.219546-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "advisor: CATE is down big, watching its cut line"
@@ -133,7 +133,8 @@
    "agent": "player",
    "kind": "trade",
    "text": "sold CHONKIE at 33K MC",
-   "to": "advisor"
+   "to": "advisor",
+   "paper": false
   },
   {
    "t": "2026-10-13T01:10:00-05:00",
@@ -149,23 +150,27 @@
   {
    "coin": "TM",
    "type": "lotto",
+   "paper": false,
    "pnl_direction": "down",
    "mc": "314K MC"
   },
   {
    "coin": "CLAUDIA",
    "type": "lotto",
+   "paper": false,
    "pnl_direction": "down",
    "mc": "4.15M MC"
   },
   {
    "coin": "CATE",
    "type": null,
+   "paper": false,
    "pnl_direction": "down",
    "mc": "51.48M MC"
   }
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
+ "last_trade_paper": false,
  "scanning": false,
  "flagged": [
   {
@@ -358,7 +363,8 @@
    "agent": "player",
    "kind": "trade",
    "text": "sold CHONKIE at 33K MC",
-   "to": "advisor"
+   "to": "advisor",
+   "paper": false
   },
   {
    "t": "2026-10-13T01:10:00-05:00",
