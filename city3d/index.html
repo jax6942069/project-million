@@ -1,0 +1,293 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>Project MILLION · Gotham 3D</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#04070a;color:#c9d1d9;font:14px/1.45 ui-monospace,Menlo,monospace}
+header{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:#030507;border-bottom:1px solid #18202a}
+h1{margin:0;font-size:14px;letter-spacing:5px;color:#e6edf3}a{color:#7d8590}.s{color:#5b6673;font-size:12px}
+#bar{display:flex;gap:8px;overflow-x:auto;padding:8px 10px;background:#070a0f;border-bottom:1px solid #18202a;scrollbar-width:none}
+.chip{flex:0 0 auto;max-width:300px;padding:6px 10px;border:1px solid #18202a;border-left:3px solid var(--c);cursor:pointer;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chip b{color:var(--c)}
+#wrap{display:grid;gap:10px;padding:10px}
+#scene{position:relative;height:64vh;min-height:430px;border:1px solid #18202a;overflow:hidden;background:#04070a;touch-action:none}
+#scene canvas{display:block;width:100%!important;height:100%!important}
+#labels{position:absolute;inset:0;pointer-events:none}
+.lb{position:absolute;transform:translate(-50%,-100%);padding:3px 8px;background:#03050add;border:1px solid var(--c);color:#e6edf3;font-size:11px;white-space:nowrap;pointer-events:auto;cursor:pointer}
+.lb:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:6px;box-shadow:0 0 6px var(--c)}
+#hint{position:absolute;bottom:8px;left:10px;color:#5b6673;font-size:11px}#q{position:absolute;bottom:8px;right:10px;color:#3b4450;font-size:10px}
+.p{background:#0a0e14;border:1px solid #18202a;padding:14px}.p h2{margin:0 0 8px;font-size:11px;letter-spacing:3px;color:#7d8590}.p h3{margin:12px 0 4px;font-size:11px;letter-spacing:2px;color:#e6edf3}
+.up{color:#3fb950}.dn{color:#f85149}.ev{border-bottom:1px solid #121820;padding:6px 0}.ev i{color:#5b6673;font-style:normal}
+.w{padding:8px;border:1px solid #3d1d1d;background:#140b0b;margin:4px 0}.q{padding:4px 0;border-bottom:1px dashed #18202a}.dump div{padding:4px 0;border-bottom:1px dashed #18202a}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:9}
+#modal .p{width:100%;max-width:560px;max-height:80vh;overflow:auto;border-top:3px solid var(--c)}#office{height:90px;margin:8px 0;image-rendering:pixelated;width:100%}
+.x{float:right;padding:6px 12px;border:1px solid #30363d;cursor:pointer}
+@media(min-width:900px){#wrap{grid-template-columns:1fr 340px}#scene{height:74vh}#side{grid-row:1/3;grid-column:2}#evp{grid-column:1}#modal{align-items:center}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
+<header><h1>GOTHAM 3D</h1><span class="s"><a href="../">dashboard</a> · <a href="../city/">2D city</a> · <span id="t">CONNECTING</span></span></header>
+<div id="bar"></div>
+<div id="wrap"><div id="scene"><div id="labels"></div><div id="hint">tap a building · drag to orbit · pinch/scroll to zoom</div><div id="q"></div></div>
+<div id="side" style="display:grid;gap:10px;align-content:start">
+<div class="p"><h2>MORNING BRIEF</h2><h3>WAITING ON YOU</h3><div id="wait"></div><h3>QUEUED TODAY</h3><div id="queue"></div><h3>WHILE YOU SLEPT</h3><div id="slept"></div></div>
+<div class="p"><h2>VAULT · BAGS</h2><div id="bags"></div></div>
+<div class="p"><h2>DUMPSTER · SKIPPED</h2><div class="dump" id="dump"></div></div></div>
+<div class="p" id="evp"><h2>WIRE TRAFFIC</h2><div id="ev"></div></div></div>
+<div id="modal"><div class="p" id="mp"></div></div>
+<script type="module">
+import * as THREE from "three";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
+import {UnrealBloomPass} from "three/addons/postprocessing/UnrealBloomPass.js";
+import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
+const PHONE=matchMedia("(max-width:700px)").matches||/Mobi|Android|iPhone/.test(navigator.userAgent);
+const Q=PHONE?{pr:Math.min(devicePixelRatio,1.25),rain:2500,bloom:true,bloomStr:.55,crowd:70,cars:22,lamps:10,dens:.7}:{pr:Math.min(devicePixelRatio,2),rain:9000,bloom:true,bloomStr:.9,crowd:200,cars:48,lamps:26,dens:1};
+document.getElementById("q").textContent=PHONE?"phone quality":"desktop quality";
+const C={bro:"#58a6ff","trench dig":"#d29922",advisor:"#a371f7",player:"#3fb950"},NM={bro:"Bro","trench dig":"trench dig",advisor:"advisor",player:"player"},ROLE={bro:"OVERSEER",advisor:"RISK",player:"TRADER","trench dig":"SCOUT"};
+let rnd=(()=>{let s=1337;return()=>(s=(s*16807)%2147483647)/2147483647})();
+const el=document.getElementById("scene");
+const R=new THREE.WebGLRenderer({antialias:!PHONE,powerPreference:"high-performance"});R.setPixelRatio(Q.pr);R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;el.prepend(R.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x07121a);scene.fog=new THREE.FogExp2(0x0c1a22,PHONE?.0055:.005);
+const cam=new THREE.PerspectiveCamera(55,1,.5,900);cam.position.set(170,120,210);
+const ctl=new OrbitControls(cam,R.domElement);ctl.target.set(0,62,0);ctl.enableDamping=true;ctl.maxPolarAngle=1.45;ctl.minDistance=30;ctl.maxDistance=320;ctl.enablePan=!PHONE;
+scene.add(new THREE.HemisphereLight(0x3a5a70,0x0a0608,.55));const moonL=new THREE.DirectionalLight(0x8fb0d0,.5);moonL.position.set(-120,200,-80);scene.add(moonL);
+// ---------- textures
+function winTex(lit=.35,tint="#e8b65a",cols=6,rows=24){const c=document.createElement("canvas");c.width=128;c.height=512;const g=c.getContext("2d");g.fillStyle="#000";g.fillRect(0,0,128,512);
+for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const r=rnd();if(r<lit){const k=r<lit*.15;g.fillStyle=k?"#9fd8ff":tint;g.globalAlpha=.55+rnd()*.45;g.fillRect(x*128/cols+4,y*512/rows+5,128/cols-8,512/rows-9)}}g.globalAlpha=1;
+const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;return t}
+const WT=[winTex(.2),winTex(.27,"#f0c070"),winTex(.18,"#d89a4a"),winTex(.24,"#ffd890",8,30)];
+function signTex(txt,col){const c=document.createElement("canvas");c.width=256;c.height=64;const g=c.getContext("2d");g.fillStyle="#000";g.fillRect(0,0,256,64);g.font="bold 40px Georgia,serif";g.textAlign="center";g.textBaseline="middle";g.shadowColor=col;g.shadowBlur=14;g.fillStyle=col;g.fillText(txt,128,34);g.strokeStyle=col;g.lineWidth=3;g.strokeRect(5,5,246,54);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
+const stoneMat=()=>new THREE.MeshStandardMaterial({color:0x1a1f26,roughness:.85,metalness:.15});
+const darkMat=new THREE.MeshStandardMaterial({color:0x10141a,roughness:.9});
+const box=new THREE.BoxGeometry(1,1,1),cone4=new THREE.ConeGeometry(.72,1,4);cone4.rotateY(Math.PI/4);
+// ---------- ground: wet road
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.MeshStandardMaterial({color:0x07090c,roughness:.25,metalness:.75}));ground.rotation.x=-Math.PI/2;scene.add(ground);
+const GRID=11,STEP=24,ROADW=9;const roads=[];for(let i=-5;i<=5;i++){roads.push(i*STEP+STEP/2)}
+const roadMat=new THREE.MeshStandardMaterial({color:0x0b0e12,roughness:.12,metalness:.85});
+for(const r of roads){for(const rot of [0,1]){const m=new THREE.Mesh(new THREE.PlaneGeometry(rot?ROADW:GRID*STEP,rot?GRID*STEP:ROADW),roadMat);m.rotation.x=-Math.PI/2;m.position.set(rot?r:0,.02,rot?0:r);scene.add(m)}}
+// fake reflections: emissive streaks under lights added later
+const streaks=[];function streak(x,z,col,len=8,w=.9){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,len),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(x,.05,z);scene.add(m);streaks.push(m);return m}
+// ---------- buildings
+const occupied={};const KEY=(i,j)=>i+","+j;
+// crew lots: grid cells (cell centers at i*STEP)
+const CREW={bro:[0,0],advisor:[-2,-1],player:[2,-1],"trench dig":[-1,3]};for(const k in CREW)occupied[KEY(...CREW[k])]=k;
+function gothicTower(x,z,w,d,h,tex,spire=true,extra=true){const g=new THREE.Group();const t=tex.clone();t.needsUpdate=true;t.repeat.set(Math.max(1,w/8),h/30);
+const m=new THREE.MeshStandardMaterial({color:0x151a21,roughness:.8,metalness:.2,emissive:0xffffff,emissiveMap:t,emissiveIntensity:.75});
+const b=new THREE.Mesh(box,m);b.scale.set(w,h,d);b.position.y=h/2;g.add(b);
+// setbacks
+let y=h,cw=w,cd=d;const tiers=extra?1+(rnd()*2|0):0;for(let i=0;i<tiers;i++){cw*=.72;cd*=.72;const hh=h*(.12+rnd()*.12);const t2=t.clone();t2.repeat.set(Math.max(1,cw/8),hh/30);const s=new THREE.Mesh(box,m.clone());s.material.emissiveMap=t2;s.scale.set(cw,hh,cd);s.position.y=y+hh/2;g.add(s);
+// corner buttresses
+for(const sx of[-1,1])for(const sz of[-1,1]){const p=new THREE.Mesh(box,darkMat);p.scale.set(1,hh*.9,1);p.position.set(sx*cw/2,y+hh*.45,sz*cd/2);g.add(p)}y+=hh}
+// cornice
+const cor=new THREE.Mesh(box,darkMat);cor.scale.set(cw+1.2,1,cd+1.2);cor.position.y=y;g.add(cor);
+if(spire){const sp=new THREE.Mesh(cone4,darkMat);const sh=6+rnd()*14;sp.scale.set(cw*.8,sh,cd*.8);sp.position.y=y+sh/2;g.add(sp);
+for(const sx of[-1,1])for(const sz of[-1,1]){const ps=new THREE.Mesh(cone4,darkMat);ps.scale.set(1.2,4,1.2);ps.position.set(sx*cw*.45,y+2,sz*cd*.45);g.add(ps)}
+if(rnd()<.35){const red=new THREE.Mesh(new THREE.SphereGeometry(.35,6,6),new THREE.MeshBasicMaterial({color:0xff2020}));red.position.y=y+sh+.3;g.add(red);blinkers.push(red)}}
+else if(rnd()<.5){// water tower
+const wt=new THREE.Group();const tank=new THREE.Mesh(new THREE.CylinderGeometry(1.8,1.8,3,10),new THREE.MeshStandardMaterial({color:0x2a2018,roughness:.9}));tank.position.y=4;wt.add(tank);const rf=new THREE.Mesh(new THREE.ConeGeometry(2,1.4,10),darkMat);rf.position.y=6.2;wt.add(rf);
+for(const a of[0,1,2,3]){const l=new THREE.Mesh(box,darkMat);l.scale.set(.2,3,.2);l.position.set(Math.cos(a*1.57)*1.4,1.5,Math.sin(a*1.57)*1.4);wt.add(l)}wt.position.set((rnd()-.5)*cw*.4,y,(rnd()-.5)*cd*.4);g.add(wt)}
+// gargoyles at top corners
+if(rnd()<.6)for(const sx of[-1,1]){const gg=new THREE.Mesh(new THREE.ConeGeometry(.5,2,5),darkMat);gg.rotation.z=sx*Math.PI/2.3;gg.position.set(sx*(cw/2+.8),y-.5,cd/2);g.add(gg);gargs.push(gg.position.clone().add(new THREE.Vector3(x,0,z)))}
+g.position.set(x,0,z);scene.add(g);g.userData.top=y;return g}
+const blinkers=[],gargs=[],neonMeshes=[];
+const SIGNS=[["THEATER","#ff3355"],["GCPD","#4aa8ff"],["HOTEL","#ff5a3c"],["BAR","#ff2d6f"],["PAWN","#34e0c8"],["24 HR","#ffcf4a"],["DINER","#ff4040"],["ACE","#2fd6ff"],["CLUB","#c84bff"],["GIN","#ff7a30"]];
+let si=0;
+for(let i=-5;i<=5;i++)for(let j=-5;j<=5;j++){if(occupied[KEY(i,j)])continue;if(rnd()>Q.dens&&Math.abs(i)+Math.abs(j)>4)continue;
+const cx=i*STEP,cz=j*STEP,near=Math.max(0,1-Math.hypot(i,j)/7);const n=rnd()<.5?1:2;
+for(let k=0;k<n;k++){const w=6+rnd()*(n==1?9:5),d=6+rnd()*(n==1?9:5),h=12+rnd()*55*near+rnd()*20;const ox=n==1?0:(k?5:-5);gothicTower(cx+ox,cz,w,d,h,WT[(rnd()*4)|0],rnd()<.55);
+if(rnd()<.32&&si<SIGNS.length*3){const[tx,col]=SIGNS[si++%SIGNS.length];const sm=new THREE.Mesh(new THREE.PlaneGeometry(7,1.75),new THREE.MeshBasicMaterial({map:signTex(tx,col),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+const side=rnd()<.5;sm.position.set(cx+ox+(side?0:w/2+.2),6+rnd()*Math.min(10,h-8),cz+(side?d/2+.2:0));if(!side)sm.rotation.y=Math.PI/2;scene.add(sm);neonMeshes.push(sm);streak(sm.position.x,sm.position.z+(side?4:0),new THREE.Color(col),6,1.6)}}}
+// ---------- crew buildings
+const crew={};const cpos=k=>new THREE.Vector3(CREW[k][0]*STEP,0,CREW[k][1]*STEP);
+{// Bro hub tower
+const p=cpos("bro"),g=gothicTower(p.x,p.z,13,13,120,WT[3],false,true);const top=g.userData.top;
+const spire=new THREE.Mesh(cone4,darkMat);spire.scale.set(6,22,6);spire.position.set(p.x,top+11,p.z);scene.add(spire);
+const lampMat=new THREE.MeshBasicMaterial({color:0xffd27a});const lamp=new THREE.Mesh(new THREE.CylinderGeometry(1.6,2,2.4,16),lampMat);lamp.position.set(p.x+5,top+1.5,p.z);scene.add(lamp);
+// volumetric signal cone
+const cg=new THREE.CylinderGeometry(1.6,26,170,32,1,true);cg.translate(0,85,0);
+const coneMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,uniforms:{col:{value:new THREE.Color(0xffd27a)},a:{value:.12}},
+vertexShader:"varying float vY;varying vec3 vN;varying vec3 vV;void main(){vY=position.y/170.;vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}",
+fragmentShader:"uniform vec3 col;uniform float a;varying float vY;varying vec3 vN;varying vec3 vV;void main(){float f=pow(abs(dot(vN,vV)),1.5);gl_FragColor=vec4(col,a*f*(1.-vY));}"});
+const sig=new THREE.Mesh(cg,coneMat);sig.position.copy(lamp.position);sig.rotation.z=-.45;scene.add(sig);
+// cloud disk with emblem (original: a winged-crescent mark)
+const ec=document.createElement("canvas");ec.width=ec.height=256;const eg=ec.getContext("2d");const gr=eg.createRadialGradient(128,128,10,128,128,128);gr.addColorStop(0,"rgba(255,220,140,.9)");gr.addColorStop(.7,"rgba(255,200,110,.35)");gr.addColorStop(1,"rgba(0,0,0,0)");eg.fillStyle=gr;eg.fillRect(0,0,256,256);
+eg.fillStyle="#000";eg.beginPath();eg.moveTo(128,105);eg.quadraticCurveTo(95,80,40,108);eg.quadraticCurveTo(70,115,72,135);eg.quadraticCurveTo(100,122,128,150);eg.quadraticCurveTo(156,122,184,135);eg.quadraticCurveTo(186,115,216,108);eg.quadraticCurveTo(161,80,128,105);eg.fill();
+const emb=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(ec),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
+const dir=new THREE.Vector3(0,1,0).applyEuler(sig.rotation);emb.position.copy(lamp.position).addScaledVector(dir,170);emb.lookAt(lamp.position);scene.add(emb);
+crew.bro={top:top+24,signal:{sig,coneMat,emb,lamp}}}
+{// advisor clocktower
+const p=cpos("advisor"),g=gothicTower(p.x,p.z,11,11,82,WT[1],false,false);const top=g.userData.top;
+const belfry=new THREE.Mesh(box,stoneMat());belfry.scale.set(9,14,9);belfry.position.set(p.x,top+7,p.z);scene.add(belfry);
+const faceMat=new THREE.MeshBasicMaterial({color:0xff2a2a});const hands=[];
+for(const r of[0,1,2,3]){const f=new THREE.Mesh(new THREE.CircleGeometry(3.4,32),faceMat);const a=r*Math.PI/2;f.position.set(p.x+Math.sin(a)*4.55,top+7,p.z+Math.cos(a)*4.55);f.rotation.y=a;scene.add(f);
+const ring=new THREE.Mesh(new THREE.RingGeometry(3.4,3.9,32),darkMat);ring.position.copy(f.position);ring.rotation.y=a;scene.add(ring);
+for(const L of[2.6,1.8]){const h=new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0x100000}));h.scale.set(.25,L,.05);h.geometry=box;const piv=new THREE.Group();piv.position.copy(f.position).add(new THREE.Vector3(Math.sin(a)*.08,0,Math.cos(a)*.08));piv.rotation.y=a;h.position.y=L/2;piv.add(h);scene.add(piv);hands.push([piv,L])}}
+const roof=new THREE.Mesh(cone4,darkMat);roof.scale.set(11,24,11);roof.position.set(p.x,top+26,p.z);scene.add(roof);
+const risk=new THREE.Mesh(new THREE.SphereGeometry(1.6,16,16),new THREE.MeshBasicMaterial({color:0x3fb950}));risk.position.set(p.x,top+39.5,p.z);scene.add(risk);
+const rl=new THREE.PointLight(0x3fb950,PHONE?40:80,60,2);rl.position.copy(risk.position);scene.add(rl);
+crew.advisor={top:top+42,faceMat,risk,rl,hands}}
+{// player bank/vault: wide classical bank with columns + vault door glow
+const p=cpos("player");const g=new THREE.Group();g.position.copy(p);scene.add(g);
+const base=new THREE.Mesh(box,stoneMat());base.scale.set(18,3,14);base.position.y=1.5;g.add(base);
+const body=new THREE.Mesh(box,stoneMat());body.scale.set(16,14,12);body.position.y=10;g.add(body);
+for(let i=-3;i<=3;i++){const c=new THREE.Mesh(new THREE.CylinderGeometry(.55,.65,12,10),new THREE.MeshStandardMaterial({color:0x2a3038,roughness:.6}));c.position.set(i*2.3,9,7.2);g.add(c)}
+const ped=new THREE.Mesh(new THREE.CylinderGeometry(0,10.5,4,3,1),stoneMat());ped.rotation.y=Math.PI/2;ped.scale.set(1,1,.42);ped.rotation.x=0;ped.position.set(0,19,4);
+const pg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-9,0,0),new THREE.Vector3(9,0,0),new THREE.Vector3(0,4,0)]);pg.setIndex([0,1,2]);pg.computeVertexNormals();const pm=new THREE.Mesh(pg,new THREE.MeshStandardMaterial({color:0x1a1f26,side:THREE.DoubleSide}));pm.position.set(0,17,7.3);g.add(pm);
+const roofB=new THREE.Mesh(box,darkMat);roofB.scale.set(17,1,13);roofB.position.y=17.4;g.add(roofB);
+const tower=gothicTower(p.x,p.z-3,10,7,46,WT[0],true,true);
+const vaultMat=new THREE.MeshBasicMaterial({color:0x0f3a1c});const door=new THREE.Mesh(new THREE.CircleGeometry(2.6,32),vaultMat);door.position.set(0,6,7.25);g.add(door);
+const vl=new THREE.PointLight(0x3fb950,0,40,2);vl.position.set(p.x,6,p.z+10);scene.add(vl);
+const arrows=new THREE.Group();arrows.position.set(p.x,24,p.z+6);scene.add(arrows);
+const sign=new THREE.Mesh(new THREE.PlaneGeometry(10,2.5),new THREE.MeshBasicMaterial({map:signTex("GOTHAM TRUST","#e3c26a"),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));sign.position.set(0,15.5,7.4);g.add(sign);
+crew.player={top:56,vaultMat,vl,arrows}}
+{// trench dig: docks/alley at the waterfront
+const p=cpos("trench dig");const g=new THREE.Group();g.position.copy(p);scene.add(g);
+const water=new THREE.Mesh(new THREE.PlaneGeometry(500,120),new THREE.MeshStandardMaterial({color:0x04080c,roughness:.05,metalness:.95}));water.rotation.x=-Math.PI/2;water.position.set(0,.03,p.z+70);scene.add(water);
+const pier=new THREE.Mesh(box,new THREE.MeshStandardMaterial({color:0x2a2018,roughness:.95}));pier.scale.set(10,1,24);pier.position.set(4,.5,18);g.add(pier);
+for(let i=0;i<4;i++){const wh=new THREE.Mesh(box,stoneMat());wh.scale.set(7,8+i*2,9);wh.position.set(-9+i*0,4+i,-6+i*0);}
+const ware=gothicTower(p.x-7,p.z-4,9,12,16,WT[2],false,false);const ware2=gothicTower(p.x+8,p.z-6,8,9,22,WT[0],false,false);
+for(let i=0;i<5;i++){const cr=new THREE.Mesh(box,new THREE.MeshStandardMaterial({color:[0x5a1d1d,0x1d3a5a,0x2e4a2a][i%3],roughness:.8}));cr.scale.set(6,2.6,2.6);cr.position.set(-2+((i%2)*1.5),1.3+(i>2?2.6:0),8+(i%3)*3);g.add(cr)}
+const dump=new THREE.Mesh(box,new THREE.MeshStandardMaterial({color:0x1f3d2a,roughness:.7}));dump.scale.set(4,2.4,2.4);dump.position.set(0,1.2,-0.5);g.add(dump);
+const fireMat=new THREE.MeshBasicMaterial({color:0xff7a20});const fire=new THREE.Mesh(new THREE.ConeGeometry(.9,1.8,8),fireMat);fire.position.set(0,3.2,-.5);g.add(fire);const fl=new THREE.PointLight(0xff8030,PHONE?20:40,24,2);fl.position.set(p.x,4,p.z-.5);scene.add(fl);
+// digger
+const dig=new THREE.Group();const body=new THREE.Mesh(new THREE.CapsuleGeometry(.4,1,3,6),new THREE.MeshStandardMaterial({color:0x1a1408}));body.position.y=1.1;dig.add(body);const hd=new THREE.Mesh(new THREE.SphereGeometry(.35,8,8),body.material);hd.position.y=2.1;dig.add(hd);
+const shov=new THREE.Group();const sh=new THREE.Mesh(box,new THREE.MeshStandardMaterial({color:0x6a5a3a}));sh.scale.set(.1,2,.1);sh.position.y=-1;shov.add(sh);const bl=new THREE.Mesh(box,sh.material);bl.scale.set(.5,.1,.6);bl.position.y=-2;shov.add(bl);shov.position.set(.5,1.8,0);dig.add(shov);
+const lant=new THREE.PointLight(0xd29922,PHONE?10:20,14,2);lant.position.set(-.6,1.5,0);dig.add(lant);
+const hole=new THREE.Mesh(new THREE.CircleGeometry(1.4,16),new THREE.MeshBasicMaterial({color:0x020202}));hole.rotation.x=-Math.PI/2;hole.position.set(2,.06,0);dig.add(hole);dig.position.set(p.x-5,0,p.z+5);scene.add(dig);
+const flare=new THREE.Mesh(new THREE.SphereGeometry(.7,8,8),new THREE.MeshBasicMaterial({color:0xff5a20}));flare.visible=false;scene.add(flare);const flL=new THREE.PointLight(0xff5a20,0,80,2);scene.add(flL);
+crew["trench dig"]={top:26,dig,shov,flare,flL,fire,fl,flareT:-1}}
+// ---------- statue lit green (skyline ref)
+{const st=new THREE.Group();const ped=new THREE.Mesh(box,stoneMat());ped.scale.set(4,5,4);ped.position.y=2.5;st.add(ped);const fig=new THREE.Mesh(new THREE.CapsuleGeometry(.9,4,4,8),new THREE.MeshStandardMaterial({color:0x2a5a3a,emissive:0x0f5a2a,emissiveIntensity:.6}));fig.position.y=8;st.add(fig);
+const arm=new THREE.Mesh(box,fig.material);arm.scale.set(.5,3.5,.5);arm.position.set(.9,11,0);arm.rotation.z=-.3;st.add(arm);const gl=new THREE.SpotLight(0x30ff80,PHONE?200:400,30,.6,.6);gl.position.set(0,0,6);gl.target=fig;st.add(gl);st.position.set(STEP/2,0,STEP/2+1.5);scene.add(st)}
+// red gothic gate across a street (street ref)
+{const gm=new THREE.MeshStandardMaterial({color:0x6a0e0e,emissive:0x400505,roughness:.6});const gx=-STEP*1.5,gz=STEP*1.5;for(const s of[-1,1]){const pl=new THREE.Mesh(box,gm);pl.scale.set(1.6,16,1.6);pl.position.set(gx+s*5.5,8,gz);scene.add(pl);const tp=new THREE.Mesh(cone4,gm);tp.scale.set(2,3,2);tp.position.set(gx+s*5.5,17.5,gz);scene.add(tp)}
+const arch=new THREE.Mesh(new THREE.TorusGeometry(5.5,.6,6,20,Math.PI),gm);arch.position.set(gx,16,gz);scene.add(arch);const bar=new THREE.Mesh(box,gm);bar.scale.set(12,1,1);bar.position.set(gx,12,gz);scene.add(bar)}
+// ---------- streetlights
+const lampHeads=[];const lampGeo=new THREE.SphereGeometry(.4,8,8),lampM=new THREE.MeshBasicMaterial({color:0xffd59a}),poleM=darkMat;
+for(let n=0;n<(PHONE?60:140);n++){const r=roads[(rnd()*roads.length)|0],u=(rnd()-.5)*GRID*STEP*.95,along=rnd()<.5,side=rnd()<.5?-1:1;const x=along?u:r+side*(ROADW/2+.4),z=along?r+side*(ROADW/2+.4):u;
+const pole=new THREE.Mesh(box,poleM);pole.scale.set(.18,6,.18);pole.position.set(x,3,z);scene.add(pole);const h=new THREE.Mesh(lampGeo,lampM.clone());h.position.set(x,6.2,z);scene.add(h);lampHeads.push(h);streak(x,z,0xffc070,5,1.2);
+if(n<Q.lamps){const L=new THREE.PointLight(0xffc070,PHONE?25:40,22,2);L.position.set(x,6,z);scene.add(L)}}
+// ---------- searchlights (ground)
+const sls=[];for(const [x,z] of [[-110,-60],[100,-80],[-60,110],[120,60]]){const g=new THREE.CylinderGeometry(.8,14,220,24,1,true);g.translate(0,110,0);const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,uniforms:{col:{value:new THREE.Color(0xa8d8ff)},a:{value:.11}},vertexShader:"varying float vY;varying vec3 vN;varying vec3 vV;void main(){vY=position.y/220.;vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}",fragmentShader:"uniform vec3 col;uniform float a;varying float vY;varying vec3 vN;varying vec3 vV;void main(){float f=pow(abs(dot(vN,vV)),1.5);gl_FragColor=vec4(col,a*f*(1.-vY));}"});
+const s=new THREE.Mesh(g,m);s.position.set(x,0,z);scene.add(s);sls.push([s,rnd()*6])}
+// ---------- sky: stars, moon, clouds
+{const n=900,pp=new Float32Array(n*3);for(let i=0;i<n;i++){const th=rnd()*6.28,ph=rnd()*1.2;pp.set([Math.cos(th)*Math.cos(ph)*700,Math.sin(ph)*700+40,Math.sin(th)*Math.cos(ph)*700],i*3)}const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(pp,3));const st=new THREE.Points(g,new THREE.PointsMaterial({color:0xcfe0ff,size:1.6,sizeAttenuation:false,fog:false}));scene.add(st)}
+const moon=new THREE.Mesh(new THREE.SphereGeometry(22,24,24),new THREE.MeshBasicMaterial({color:0xdfe6ee,fog:false}));moon.position.set(-300,330,-420);scene.add(moon);
+const cloudTex=(()=>{const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");for(let i=0;i<30;i++){const x=20+rnd()*88,y=40+rnd()*48,r=12+rnd()*22,gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,"rgba(60,72,86,.5)");gr.addColorStop(1,"rgba(60,72,86,0)");g.fillStyle=gr;g.fillRect(0,0,128,128)}return new THREE.CanvasTexture(c)})();
+const clouds=[];for(let i=0;i<(PHONE?10:22);i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTex,transparent:true,depthWrite:false,fog:false,opacity:.8}));s.scale.set(260,120,1);s.position.set((rnd()-.5)*900,200+rnd()*120,-200-rnd()*400);scene.add(s);clouds.push(s)}
+// ---------- rain
+const rg=new THREE.BufferGeometry(),rp=new Float32Array(Q.rain*6);for(let i=0;i<Q.rain;i++){const x=(rnd()-.5)*260,y=rnd()*160,z=(rnd()-.5)*260;rp.set([x,y,z,x-.6,y-2.6,z-.2],i*6)}rg.setAttribute("position",new THREE.BufferAttribute(rp,3));
+const rain=new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0x8fb4cc,transparent:true,opacity:.2}));scene.add(rain);
+// ---------- cars
+const cars=[];const carGeo=new THREE.BoxGeometry(2,1.1,4.2),cabGeo=new THREE.BoxGeometry(1.8,.8,2.2),hlGeo=new THREE.SphereGeometry(.22,6,6);
+const hlM=new THREE.MeshBasicMaterial({color:0xfff3d0}),tlM=new THREE.MeshBasicMaterial({color:0xff1a1a});
+const beamTex=(()=>{const c=document.createElement("canvas");c.width=64;c.height=128;const g=c.getContext("2d");const gr=g.createLinearGradient(0,0,0,128);gr.addColorStop(0,"rgba(255,245,210,.6)");gr.addColorStop(1,"rgba(255,245,210,0)");g.fillStyle=gr;g.beginPath();g.moveTo(26,0);g.lineTo(38,0);g.lineTo(64,128);g.lineTo(0,128);g.fill();return new THREE.CanvasTexture(c)})();
+for(let i=0;i<Q.cars;i++){const cop=i<(PHONE?4:8);const g=new THREE.Group();const bm=new THREE.MeshStandardMaterial({color:cop?0x14203a:[0x2a2a2e,0x3a1010,0x14262a,0x1e1e14][i%4],roughness:.3,metalness:.7});
+const b=new THREE.Mesh(carGeo,bm);b.position.y=.7;g.add(b);const c=new THREE.Mesh(cabGeo,bm);c.position.set(0,1.6,-.2);g.add(c);
+for(const s of[-.7,.7]){const h=new THREE.Mesh(hlGeo,hlM);h.position.set(s,.8,2.12);g.add(h);const t=new THREE.Mesh(hlGeo,tlM);t.position.set(s,.8,-2.12);g.add(t)}
+const beam=new THREE.Mesh(new THREE.PlaneGeometry(5,12),new THREE.MeshBasicMaterial({map:beamTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));beam.rotation.x=-Math.PI/2;beam.position.set(0,.1,8.2);g.add(beam);
+let bar=null;if(cop){bar=[new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0xff2020})),new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0x2060ff}))];bar.forEach((m,k)=>{m.scale.set(.7,.3,.4);m.position.set(k?.4:-.4,2.15,-.2);g.add(m)});if(!PHONE||i<2){const pl=new THREE.PointLight(0xff2020,30,20,2);pl.position.y=3;g.add(pl);bar.push(pl)}}
+const road=roads[(rnd()*roads.length)|0],axis=rnd()<.5?0:1,dir=rnd()<.5?1:-1;g.userData={road,axis,dir,u:(rnd()-.5)*GRID*STEP,v:(cop?.5:.25)+rnd()*.25,cop,bar};scene.add(g);cars.push(g)}
+// ---------- crowds/thugs (instanced)
+const pedGeo=new THREE.CapsuleGeometry(.3,1.1,2,6);pedGeo.translate(0,.85,0);const pedM=new THREE.MeshStandardMaterial({color:0x0b0c10,roughness:.9});
+const peds=new THREE.InstancedMesh(pedGeo,pedM,Q.crowd);scene.add(peds);const PD=[];
+for(let i=0;i<Q.crowd;i++){const road=roads[(rnd()*roads.length)|0],axis=rnd()<.5?0:1,side=rnd()<.5?-1:1;PD.push({road,axis,off:side*(ROADW/2+.9+rnd()*.6),u:(rnd()-.5)*GRID*STEP,v:(rnd()-.5)*.06,thug:i%5==0,run:0})}
+const eyes=new THREE.InstancedMesh(new THREE.SphereGeometry(.07,4,4),new THREE.MeshBasicMaterial({color:0xff3030}),Q.crowd);scene.add(eyes);
+// mugging + chase near the gate
+const mug=new THREE.Group();for(const [x,c] of[[0,0x050505],[1.1,0x050505]]){const m=new THREE.Mesh(pedGeo,new THREE.MeshStandardMaterial({color:c}));m.position.x=x;mug.add(m)}mug.position.set(-STEP*1.5+3,0,STEP*1.5+6);scene.add(mug);
+const chase=[new THREE.Mesh(pedGeo,pedM),new THREE.Mesh(pedGeo,new THREE.MeshStandardMaterial({color:0x14284a}))];chase.forEach(m=>scene.add(m));const copHat=new THREE.Mesh(new THREE.SphereGeometry(.18,6,6),new THREE.MeshBasicMaterial({color:0x58a6ff}));chase[1].add(copHat);copHat.position.y=2.1;
+// steam vents
+const steamTex=(()=>{const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(200,210,225,.45)");gr.addColorStop(1,"rgba(200,210,225,0)");g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
+const steam=[];for(let v=0;v<(PHONE?5:10);v++){const r=roads[(rnd()*roads.length)|0],u=(rnd()-.5)*GRID*STEP*.8,ax=rnd()<.5;for(let k=0;k<6;k++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:steamTex,transparent:true,depthWrite:false}));s.userData={x:ax?u:r,z:ax?r:u,ph:k/6};scene.add(s);steam.push(s)}}
+// ---------- vigilante (original caped silhouette)
+const capeShape=new THREE.Shape();capeShape.moveTo(0,.4);capeShape.quadraticCurveTo(-2,.8,-4,-.4);capeShape.quadraticCurveTo(-2.8,-.1,-2.2,-.9);capeShape.quadraticCurveTo(-1,-.3,0,-1);capeShape.quadraticCurveTo(1,-.3,2.2,-.9);capeShape.quadraticCurveTo(2.8,-.1,4,-.4);capeShape.quadraticCurveTo(2,.8,0,.4);
+const vig=new THREE.Group();const capeM=new THREE.MeshBasicMaterial({color:0x010102,side:THREE.DoubleSide});const capeMesh=new THREE.Mesh(new THREE.ShapeGeometry(capeShape),capeM);capeMesh.rotation.x=-Math.PI/2;vig.add(capeMesh);
+const vb=new THREE.Mesh(new THREE.CapsuleGeometry(.35,1.2,2,6),capeM);vb.rotation.x=Math.PI/2;vig.add(vb);
+const perch=new THREE.Group();const pb=new THREE.Mesh(new THREE.ConeGeometry(.9,3,6),capeM);pb.position.y=1.5;perch.add(pb);const ph=new THREE.Mesh(new THREE.SphereGeometry(.38,8,8),capeM);ph.position.y=3.2;perch.add(ph);for(const s of[-1,1]){const e=new THREE.Mesh(new THREE.ConeGeometry(.1,.5,4),capeM);e.position.set(s*.2,3.65,0);perch.add(e)}
+vig.visible=perch.visible=false;scene.add(vig,perch);let V={next:4,ph:-1,t:0,a:null,b:null};
+// ---------- sky lines + packets
+const lines={},packets=[];const tops={};
+function topOf(k){return new THREE.Vector3(CREW[k][0]*STEP,crew[k].top,CREW[k][1]*STEP)}
+for(const k of["advisor","player","trench dig"]){const a=topOf("bro"),b=topOf(k);const mid=a.clone().lerp(b,.5);mid.y=Math.max(a.y,b.y)+18;const cur=new THREE.QuadraticBezierCurve3(a,mid,b);
+const g=new THREE.BufferGeometry().setFromPoints(cur.getPoints(60));const l=new THREE.Line(g,new THREE.LineDashedMaterial({color:new THREE.Color(C[k]),dashSize:1.4,gapSize:1.6,transparent:true,opacity:.75}));l.computeLineDistances();scene.add(l);lines[k]=cur}
+const pkGeo=new THREE.SphereGeometry(.9,10,10);
+function sendPacket(from,to,delay=0){let k=from=="bro"?to:from;if(!lines[k])k=["advisor","player","trench dig"][(Math.random()*3)|0];const rev=from=="bro";const m=new THREE.Mesh(pkGeo,new THREE.MeshBasicMaterial({color:new THREE.Color(C[from]||"#fff")}));scene.add(m);packets.push({m,cur:lines[k],t:-delay,rev,L:PHONE?null:null})}
+// ---------- post
+let composer,bloom;function setupPost(){composer=new EffectComposer(R);composer.addPass(new RenderPass(scene,cam));bloom=new UnrealBloomPass(new THREE.Vector2(256,256),Q.bloomStr,.55,.62);if(Q.bloom)composer.addPass(bloom);composer.addPass(new OutputPass())}setupPost();
+function resize(){const w=el.clientWidth,h=el.clientHeight;R.setSize(w,h,false);composer.setSize(w,h);cam.aspect=w/h;cam.fov=w<h?68:52;cam.updateProjectionMatrix();if(w<h&&cam.position.length()<200)cam.position.multiplyScalar(1.15)}addEventListener("resize",resize);resize();
+// ---------- labels
+const LB={};const lbl=document.getElementById("labels");for(const k in CREW){const d=document.createElement("div");d.className="lb";d.style.setProperty("--c",C[k]);d.textContent=`${NM[k]} · ${ROLE[k]}`;d.onclick=()=>openA(k);lbl.appendChild(d);LB[k]=d}
+// ---------- interaction: tap building
+const ray=new THREE.Raycaster();let down=null;R.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];idle=0});R.domElement.addEventListener("pointerup",e=>{if(!down)return;if(Math.hypot(e.clientX-down[0],e.clientY-down[1])<6){const r=R.domElement.getBoundingClientRect();const m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);const h=ray.intersectObjects(scene.children,true)[0];if(h){let best=null,bd=1e9;for(const k in CREW){const p=cpos(k);const dd=Math.hypot(h.point.x-p.x,h.point.z-p.z);if(dd<bd){bd=dd;best=k}}if(bd<16)openA(best)}}down=null});
+ctl.addEventListener("start",()=>idle=0);
+// ---------- state
+let S={},seen=new Set(),first=true,lastTrade=null,vaultGlow=0,idle=99,risk="green";
+const clock=new THREE.Clock();let fpsT=0,fpsN=0;
+function tick(){const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;idle+=dt;
+// adaptive pixel ratio
+fpsT+=dt;fpsN++;if(fpsT>2){const fps=fpsN/fpsT;if(fps<28&&R.getPixelRatio()>.6){R.setPixelRatio(Math.max(.6,R.getPixelRatio()-.2));resize()}if(fps<22&&bloom.enabled&&PHONE)bloom.enabled=false;fpsT=0;fpsN=0}
+// cinematic idle camera
+if(idle>6){const a=t*.05;const r=PHONE?260:230;cam.position.lerp(new THREE.Vector3(Math.cos(a)*r,105+Math.sin(t*.07)*25,Math.sin(a)*r),.004);ctl.target.lerp(new THREE.Vector3(0,62,0),.01)}
+ctl.update();
+// rain
+const pa=rain.geometry.attributes.position.array;for(let i=0;i<pa.length;i+=6){pa[i+1]-=90*dt;pa[i+4]-=90*dt;pa[i]-=20*dt;pa[i+3]-=20*dt;if(pa[i+1]<0){const x=cam.position.x*.0+(Math.random()-.5)*260,z=(Math.random()-.5)*260,y=150+Math.random()*20;pa[i]=x;pa[i+1]=y;pa[i+2]=z;pa[i+3]=x-.6;pa[i+4]=y-2.6;pa[i+5]=z-.2}}rain.geometry.attributes.position.needsUpdate=true;rain.position.set(ctl.target.x,0,ctl.target.z);
+for(const c of clouds){c.position.x+=dt*4;if(c.position.x>460)c.position.x=-460}
+for(const[s,o] of sls){s.rotation.z=Math.sin(t*.25+o)*.42;s.rotation.x=Math.cos(t*.2+o)*.3}
+for(const b of blinkers)b.visible=Math.sin(t*2+b.id)>0;
+lampHeads.forEach((h,i)=>{if(i%9==0)h.material.color.setScalar(Math.sin(t*23+i)>-.6||Math.sin(t*3+i)>.3?1:.15)});
+neonMeshes.forEach((n,i)=>{n.material.opacity=(i%4==0&&Math.sin(t*7+i)<-.85)?.1:1});
+for(const s of steam){const p=(t*.35+s.userData.ph)%1;s.position.set(s.userData.x+Math.sin(p*5)*.8,p*9,s.userData.z);const k=2+p*7;s.scale.set(k,k,1);s.material.opacity=.5*(1-p)}
+// cars
+const scatter=V.ph==1;for(const c of cars){const d=c.userData;d.u+=d.dir*d.v*dt*30*(d.cop&&scatter?1.6:1);const lim=GRID*STEP/2;if(d.u>lim)d.u=-lim;if(d.u<-lim)d.u=lim;const lane=d.dir*2.2;
+if(d.axis){c.position.set(d.road+lane,0,d.u);c.rotation.y=d.dir>0?0:Math.PI}else{c.position.set(d.u,0,d.road-lane);c.rotation.y=d.dir>0?Math.PI/2:-Math.PI/2}
+if(d.bar){const f=Math.sin(t*14)>0;d.bar[0].material.color.setScalar(0);d.bar[0].material.color.set(f?0xff2020:0x300000);d.bar[1].material.color.set(f?0x001030:0x2060ff);if(d.bar[2])d.bar[2].color.set(f?0xff2020:0x2060ff)}}
+// peds
+const M=new THREE.Matrix4(),Qt=new THREE.Quaternion(),Sc=new THREE.Vector3(1,1,1),P=new THREE.Vector3();
+PD.forEach((p,i)=>{if(p.thug){if(scatter&&!p.run)p.run=(Math.random()<.5?-1:1)*.5;if(!scatter&&V.ph<0)p.run=0}p.u+=(p.run||p.v)*dt*30;const lim=GRID*STEP/2;if(p.u>lim)p.u=-lim;if(p.u<-lim)p.u=lim;
+const bob=p.run?Math.abs(Math.sin(t*14+i))*.25:Math.abs(Math.sin(t*5+i))*.05;if(p.axis)P.set(p.road+p.off,bob,p.u);else P.set(p.u,bob,p.road+p.off);M.compose(P,Qt,Sc);peds.setMatrixAt(i,M);
+P.y+=1.75;P.x+=.12;M.compose(P,Qt,p.thug?Sc:new THREE.Vector3(0,0,0));eyes.setMatrixAt(i,M)});peds.instanceMatrix.needsUpdate=true;eyes.instanceMatrix.needsUpdate=true;
+mug.visible=!scatter;mug.children[1].position.x=1.1+Math.sin(t*4)*.15;
+const cu=((t*.06)%1)*GRID*STEP-GRID*STEP/2;chase[0].position.set(cu,Math.abs(Math.sin(t*14))*.3,roads[6]+5.6);chase[1].position.set(cu-5,Math.abs(Math.sin(t*14+1))*.3,roads[6]+5.6);copHat.material.color.set(Math.sin(t*12)>0?0x58a6ff:0xff3030);
+// vigilante: every ~10s perch then glide
+if(V.ph<0&&t>V.next){V.ph=0;V.t=t;const gs=gargs.length?gargs:[topOf("advisor")];V.a=gs[(Math.random()*gs.length)|0].clone();V.a.y+=.6;const b=topOf(["bro","advisor","player"][(Math.random()*3)|0]);V.b=b.clone().add(new THREE.Vector3((Math.random()-.5)*30,8,(Math.random()-.5)*30))}
+if(V.ph==0){perch.visible=true;perch.position.copy(V.a);perch.lookAt(cam.position.x,V.a.y,cam.position.z);if(t-V.t>3){V.ph=1;V.t=t;perch.visible=false;vig.visible=true}}
+if(V.ph==1){const k=(t-V.t)/3.2;const p=V.a.clone().lerp(V.b,k);p.y+=Math.sin(k*Math.PI)*14-k*4;const ahead=V.a.clone().lerp(V.b,k+.02);ahead.y=p.y;vig.position.copy(p);vig.lookAt(ahead);vig.rotateX(Math.sin(t*3)*.1);capeMesh.scale.set(1.6,1.6+Math.sin(t*6)*.1,1.6);if(k>=1){V.ph=-1;vig.visible=false;V.next=t+6+Math.random()*3}}
+// crew
+const b=crew.bro.signal,red=risk=="red";b.coneMat.uniforms.col.value.set(red?0xff2a2a:0xffd27a);b.coneMat.uniforms.a.value=red?.16+.12*Math.sin(t*5):.12;b.emb.material.color.set(red?0xff5050:0xffffff);b.emb.material.opacity=red?.6+.4*Math.sin(t*5):.9;b.sig.rotation.y=Math.sin(t*.15)*.4;
+const dir=new THREE.Vector3(0,1,0).applyEuler(b.sig.rotation);b.emb.position.copy(b.lamp.position).addScaledVector(dir,170);b.emb.lookAt(b.lamp.position);
+const A=crew.advisor;const rc={green:0x3fb950,yellow:0xd29922,red:0xf85149}[risk];A.risk.material.color.set(rc);A.rl.color.set(rc);A.rl.intensity=(PHONE?40:80)*(red?(1+Math.sin(t*6)):1);A.faceMat.color.set(0xff2a2a).multiplyScalar(.75+.25*Math.sin(t*1.3));
+const now=new Date();const hrs=(now.getHours()%12+now.getMinutes()/60)/12*6.283,mins=now.getMinutes()/60*6.283;A.hands.forEach(([p],i)=>{p.children[0].parent.rotation.z=-(i%2?mins:hrs)});
+const Pl=crew.player;vaultGlow=Math.max(0,vaultGlow-dt*.25);Pl.vaultMat.color.setRGB(.06+vaultGlow*.2,.23+vaultGlow*.77,.11+vaultGlow*.2);Pl.vl.intensity=vaultGlow*120;Pl.arrows.children.forEach((a,i)=>{a.position.y=Math.sin(t*2+i)*.4});
+const Tg=crew["trench dig"];Tg.dig.visible=true;if(S.scanning){Tg.shov.rotation.z=Math.sin(t*4)*.9;Tg.dig.rotation.x=Math.sin(t*4)*.08}else{Tg.shov.rotation.z=.3}
+Tg.fire.scale.y=1+Math.sin(t*20)*.2;Tg.fl.intensity=(PHONE?20:40)*(.8+Math.random()*.3);
+if(Tg.flareT>=0){Tg.flareT+=dt;const k=Tg.flareT;const p=cpos("trench dig");Tg.flare.visible=true;Tg.flare.position.set(p.x-5,4+k*22-k*k*2.2,p.z+5);Tg.flL.position.copy(Tg.flare.position);Tg.flL.intensity=PHONE?150:300;if(k>9){Tg.flareT=-1;Tg.flare.visible=false;Tg.flL.intensity=0}}
+// packets
+for(let i=packets.length-1;i>=0;i--){const p=packets[i];p.t+=dt*.4;if(p.t<0){p.m.visible=false;continue}p.m.visible=true;p.m.position.copy(p.cur.getPoint(p.rev?Math.min(1,p.t):1-Math.min(1,p.t)));p.m.scale.setScalar(1+.3*Math.sin(t*10));if(p.t>=1){scene.remove(p.m);packets.splice(i,1)}}
+if(Math.random()<dt*.15&&S.events?.length){const e=S.events[(Math.random()*S.events.length)|0];sendPacket(e.agent,e.to)}
+// labels
+const r=el.getBoundingClientRect();for(const k in CREW){const v=topOf(k);v.y+=4;v.project(cam);const d=LB[k];if(v.z>1){d.style.display="none";continue}d.style.display="";d.style.left=((v.x+1)/2*r.width)+"px";d.style.top=((1-v.y)/2*r.height)+"px"}
+composer.render(dt);requestAnimationFrame(tick)}
+tick();
+// ---------- P&L arrows
+function setArrows(bags){const g=crew.player.arrows;while(g.children.length)g.remove(g.children[0]);(bags||[]).forEach((b,i)=>{const up=b.pnl_direction=="up",fl=b.pnl_direction=="flat";const m=new THREE.Mesh(new THREE.ConeGeometry(1.1,2.4,4),new THREE.MeshBasicMaterial({color:fl?0x8b949e:up?0x3fb950:0xf85149}));if(!up&&!fl)m.rotation.x=Math.PI;m.position.x=(i-(bags.length-1)/2)*3.2;g.add(m)})}
+// ---------- UI
+const esc=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${esc(e.text)}</div>`;
+function office(k){const o=document.createElement("canvas");o.id="office";o.width=160;o.height=45;const q=o.getContext("2d"),c=C[k];q.fillStyle="#0d131b";q.fillRect(0,0,160,45);q.fillStyle="#1a2330";q.fillRect(0,34,160,11);q.fillStyle="#0b1019";q.fillRect(110,6,40,20);for(let i=0;i<5;i++){q.fillStyle="#e3b34155";q.fillRect(113+i*7,9+(i%2)*6,3,4)}q.fillStyle="#2b3440";q.fillRect(40,24,40,4);q.fillRect(44,28,3,6);q.fillRect(73,28,3,6);q.fillStyle="#58a6ff55";q.fillRect(52,14,16,10);q.fillStyle=c;q.fillRect(28,16,6,6);q.fillRect(27,22,8,10);q.fillStyle="#9fb3c8";for(let i=0;i<12;i++)q.fillRect((i*37)%110,(i*13)%30,1,3);return o}
+window.openA=function(k){const a=S.agents?.[k];if(!a)return;const m=document.getElementById("mp");m.style.setProperty("--c",C[k]);
+m.innerHTML=`<span class="x" id="cx">close</span><h2 style="color:${C[k]}">${NM[k].toUpperCase()} · ${esc(a.role).toUpperCase()}</h2><div class="s">${esc(a.where)} · updated ${esc(a.updated)}</div><div id="ofs"></div><div>${esc(a.activity)}</div><h3>RECENT</h3>${(S.events||[]).filter(e=>e.agent==k).map(evh).join("")||'<div class="s">nothing yet</div>'}`;
+document.getElementById("ofs").appendChild(office(k));document.getElementById("cx").onclick=()=>document.getElementById("modal").style.display="none";document.getElementById("modal").style.display="flex";
+idle=0;const p=cpos(k);ctl.target.set(p.x,crew[k].top*.6,p.z)}
+document.getElementById("modal").onclick=e=>{if(e.target.id=="modal")e.target.style.display="none"};
+async function poll(){try{const r=await fetch("../status.json?"+Date.now(),{cache:"no-store"});S=await r.json();risk=S.risk_level||"green";
+for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first){sendPacket(e.agent,e.to);if(e.kind=="flag")crew["trench dig"].flareT=0}}}
+if(lastTrade&&S.last_trade_ts!==lastTrade)vaultGlow=1;lastTrade=S.last_trade_ts;
+if(first){S.events.slice(0,6).forEach((e,i)=>sendPacket(e.agent,e.to,i*.5));if(S.flagged?.length)crew["trench dig"].flareT=0;setArrows(S.bags)}else if(JSON.stringify(S.bags)!==poll.lb)setArrows(S.bags);poll.lb=JSON.stringify(S.bags);first=false;
+document.getElementById("bar").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="chip" style="--c:${C[k]}" onclick="openA('${k}')"><b>${NM[k]}</b> ${esc(a.activity)}</div>`).join("");
+document.getElementById("ev").innerHTML=S.events.map(evh).join("");
+document.getElementById("wait").innerHTML=(S.waiting_on_you||[]).map(w=>`<div class="w">${esc(w)}</div>`).join("")||'<div class="s">nothing — go back to sleep</div>';
+document.getElementById("queue").innerHTML=(S.queued_today||[]).map(q=>`<div class="q"><i class="s">${esc(q.time)}</i> ${esc(q.what)}</div>`).join("");
+document.getElementById("slept").innerHTML=(S.while_you_slept||[]).map(evh).join("")||'<div class="s">quiet night</div>';
+document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[risk]}">${risk.toUpperCase()}</b></div>`;
+document.getElementById("dump").innerHTML=S.dumpster.map(d=>`<div><b>${esc(d.coin)}</b><br><span class="s">${esc(d.reason)}</span></div>`).join("");
+document.getElementById("t").textContent="LIVE · "+new Date().toLocaleTimeString()}catch(e){document.getElementById("t").textContent="RECONNECTING"}}
+poll();setInterval(poll,1000);
+</script></body></html>
