@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T07:34:07.670048-05:00",
+ "generated": "2026-10-13T07:35:08.413800-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -27,36 +27,36 @@
  ],
  "while_you_slept": [
   {
-   "t": "2026-10-13T07:15:00-05:00",
-   "time": "7:15 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
+  },
+  {
+   "t": "2026-10-13T07:15:00-05:00",
+   "time": "7:15 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
   },
   {
    "t": "2026-10-13T06:47:00-05:00",
@@ -173,7 +173,7 @@
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
  "last_trade_paper": false,
- "scanning": false,
+ "scanning": true,
  "flagged": [
   {
    "coin": "VRAX (Solana)",
@@ -187,6 +187,18 @@
   }
  ],
  "dumpster": [
+  {
+   "coin": "COWE",
+   "reason": "Cow meme, ~ mc / ~ liq; X callers say already 10x–13x, paid DEX push, ~211 bundler clusters — liq under and…"
+  },
+  {
+   "coin": "The Lion",
+   "reason": "6 min old, ~ mc / ~ liq; AI-signal bots note bundle wallets hold a large slice — liq under"
+  },
+  {
+   "coin": "PUTBACK",
+   "reason": "~ mc / ~ liq, −5% 1h, no catalyst"
+  },
   {
    "coin": "SpaceX Jellyfish",
    "reason": "Liq under (~) after −27% dump; viral CRS-35 catalyst but no official account"
@@ -214,18 +226,6 @@
   {
    "coin": "HUMPH / swordcat",
    "reason": "Hard skip — multi-M / old (HUMPH ~; swordcat ~ 15d)"
-  },
-  {
-   "coin": "AIRFROG / Bear / Chonkie",
-   "reason": "Dead or prior warnings (AIRFROG ~ −95%; Bear ~; Chonkie ~)"
-  },
-  {
-   "coin": "WORM / HH / Jamie curve pack",
-   "reason": "Still on pump.fun curve or micro; no catalyst"
-  },
-  {
-   "coin": "Santaro / GAME OF CAT / CHONK boosts",
-   "reason": "Stale or paid-boost recycled set"
   }
  ],
  "agents": {
@@ -238,8 +238,8 @@
   "trench dig": {
    "role": "Scout",
    "where": "alleys & docks",
-   "activity": "resting between scans — 10 in the dumpster",
-   "updated": "7:12 AM CT"
+   "activity": "digging the trenches — 10 in the dumpster",
+   "updated": "7:36 AM CT"
   },
   "advisor": {
    "role": "Risk",
@@ -256,36 +256,36 @@
  },
  "events": [
   {
-   "t": "2026-10-13T07:15:00-05:00",
-   "time": "7:15 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:12:28-05:00",
-   "time": "7:12 AM CT",
+   "t": "2026-10-13T07:36:00-05:00",
+   "time": "7:36 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
+  },
+  {
+   "t": "2026-10-13T07:15:00-05:00",
+   "time": "7:15 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
   },
   {
    "t": "2026-10-13T06:47:00-05:00",
