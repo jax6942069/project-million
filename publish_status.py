@@ -15,6 +15,8 @@ def clean(s):  # strip $amounts, wallet/contract addresses, account numbers
     s = re.sub(r"\(\s*\)", "", s)
     s = re.sub(r"\s{2,}", " ", s).strip(" ,;:")
     return s if len(s) <= 110 else s[:107].rstrip() + "…"
+def is_paper(t):
+    return bool(t.get("paper")) or "paper" in str(t.get("tag", "")).lower() or "paper" in str(t.get("account", "")).lower() or "paper" in str(t.get("mode", "")).lower()
 def mc(v):
     try: v = float(v)
     except Exception: return None
@@ -39,7 +41,8 @@ trades = sorted(led.get("trades", []), key=lambda x: x.get("time", ""))
 for t in trades:
     verb = {"sell": "sold", "buy": "bought"}.get(t.get("side"), t.get("side", "traded"))
     m = mc(t.get("mc") or t.get("exit_mc"))
-    add(ts(t.get("time")), "player", "trade", f"{verb} {t.get('coin')}" + (f" at {m}" if m else ""), "advisor")
+    add(ts(t.get("time")), "player", "trade", ("PAPER: " if is_paper(t) else "") + f"{verb} {t.get('coin')}" + (f" at {m}" if m else ""), "advisor")
+    if ev and ev[-1]["agent"] == "player": ev[-1]["paper"] = is_paper(t)
 bags = []
 rp = {p.get("coin"): p for p in risk.get("positions", [])}
 for o in led.get("open", []):
@@ -48,7 +51,7 @@ for o in led.get("open", []):
     if cb and mv is not None: d = "up" if mv > cb else "down" if mv < cb else "flat"
     elif r.get("pnl_pct") is not None: d = "up" if r["pnl_pct"] > 0 else "down"
     else: d = "flat"
-    bags.append({"coin": c, "type": o.get("type"), "pnl_direction": d, "mc": mc(o.get("mark_mc") or r.get("mcap_usd"))})
+    bags.append({"coin": c, "type": o.get("type"), "paper": is_paper(o), "pnl_direction": d, "mc": mc(o.get("mark_mc") or r.get("mcap_usd"))})
 for c, r in rp.items():
     if c not in [b["coin"] for b in bags]:
         p = r.get("pnl_pct"); bags.append({"coin": c, "type": r.get("status"), "pnl_direction": "flat" if p is None else ("up" if p > 0 else "down"), "mc": mc(r.get("mcap_usd"))})
@@ -90,7 +93,7 @@ for k, st in sorted((pre.get("stories") or {}).items(), key=lambda kv: str(kv[1]
 queued.append({"time": "Oct 14, 7:30 AM CT", "what": "Bro: CPI alert"})
 night0 = now.replace(hour=0, minute=0, second=0, microsecond=0)
 slept = [e for e in allev if e["t"] >= night0.isoformat() and e["t"] < now.replace(hour=8, minute=0).isoformat()]
-out = {"generated": now.isoformat(), "waiting_on_you": waiting, "queued_today": queued, "while_you_slept": slept[:15], "risk_level": risk_level, "bags": bags, "last_trade_ts": last_trade.isoformat() if last_trade else None,
+out = {"generated": now.isoformat(), "waiting_on_you": waiting, "queued_today": queued, "while_you_slept": slept[:15], "risk_level": risk_level, "bags": bags, "last_trade_ts": last_trade.isoformat() if last_trade else None, "last_trade_paper": is_paper(trades[-1]) if trades else False,
        "scanning": scanning, "flagged": flagged, "dumpster": dumpster, "agents": agents, "events": ev}
 blob = json.dumps(out, indent=1, ensure_ascii=False)
 assert not re.search(r"\$\s?\d", blob), "dollar amount leaked"

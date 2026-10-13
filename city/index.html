@@ -92,7 +92,7 @@ const sc=Math.sin(t/260)>0?"248,81,73":"88,166,255",[sx,sy]=iso(2,4.5);const rg=
 const all=[...fill.map(f=>({f})),...Object.entries(BL).map(([k,b])=>({k,b}))].sort((A,B)=>{const a=A.f?A.f.g:A.b.g,b=B.f?B.f.g:B.b.g;return a[0]+a[1]-b[0]-b[1]});
 hit=[];const tops={};
 for(const o of all){if(o.f){const[px,py]=iso(...o.f.g);box(px,py,o.f.w,o.f.h,"#141b24","#0c1118","#0f151d","#e3b34140");continue}
-const{k,b}=o,[px,py]=iso(...b.g),c=C[k];let win=c+"aa";if(k=="player"&&vf>0){win="#3fb950";vf-=.004}
+const{k,b}=o,[px,py]=iso(...b.g),c=C[k];let win=c+"aa";if(k=="player"&&vf>0){win=window.pg?"#79c0ff":"#3fb950";vf-=.004}
 const r=box(px,py,b.w,b.h,"#1a2330","#0d131b","#111924",win);hit.push([k,...r]);tops[k]=[px,py-b.h*d*cam.z-b.w*d*cam.z/4];
 x.strokeStyle=c+"66";x.strokeRect(r[0],r[1],r[2],r[3]*0);
 if(k=="advisor"){const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"}[lv];x.fillStyle=L;x.beginPath();x.arc(px,py-b.h*d*cam.z*.8,6*d*cam.z,0,7);x.fill()}
@@ -119,7 +119,7 @@ cam.x+=(e.clientX-drag[0])*d;cam.y+=(e.clientY-drag[1])*d;moved+=Math.abs(e.clie
 cv.addEventListener("pointerup",e=>{pts.delete(e.pointerId);pd=0;if(moved<8){const r=cv.getBoundingClientRect(),X=(e.clientX-r.left)*d,Y=(e.clientY-r.top)*d;for(const[k,a,b,w,h]of hit.slice().reverse())if(X>a&&X<a+w&&Y>b-30*d&&Y<b+h){openA(k);break}}if(!pts.size)drag=null});
 cv.addEventListener("wheel",e=>{e.preventDefault();cam.z=Math.min(2.5,Math.max(.4,cam.z*(e.deltaY<0?1.1:.9)))},{passive:false});
 const esc=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${esc(e.text)}</div>`;
+const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${e.paper?'<span style="color:#79c0ff"> ◇</span>':""}${esc(e.text)}</div>`;
 function office(k){const o=document.createElement("canvas");o.id="office";o.width=160;o.height=45;const q=o.getContext("2d"),c=C[k];q.fillStyle="#0d131b";q.fillRect(0,0,160,45);q.fillStyle="#1a2330";q.fillRect(0,34,160,11);
 q.fillStyle="#0b1019";q.fillRect(110,6,40,20);for(let i=0;i<5;i++){q.fillStyle="#e3b34155";q.fillRect(113+i*7,9+(i%2)*6,3,4)}q.fillStyle="#2b3440";q.fillRect(40,24,40,4);q.fillRect(44,28,3,6);q.fillRect(73,28,3,6);
 q.fillStyle="#58a6ff55";q.fillRect(52,14,16,10);q.fillStyle=c;q.fillRect(28,16,6,6);q.fillRect(27,22,8,10);q.fillStyle="#9fb3c8";for(let i=0;i<12;i++)q.fillRect((i*37)%110,(i*13)%30,1,3);return o}
@@ -129,13 +129,13 @@ document.getElementById("ofs").appendChild(office(k));document.getElementById("m
 document.getElementById("modal").onclick=e=>{if(e.target.id=="modal")e.target.style.display="none"};
 async function poll(){try{const r=await fetch("../status.json?"+Date.now());S=await r.json();
 for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first){pk.push({f:e.agent,to:e.to,k:0});if(e.kind=="flag")flare=1}}}
-if(lt&&S.last_trade_ts!==lt)vf=1;lt=S.last_trade_ts;if(first){S.events.slice(0,5).forEach((e,i)=>pk.push({f:e.agent,to:e.to,k:-i*.3}));if(S.flagged?.length)flare=1}first=false;
+if(lt&&S.last_trade_ts!==lt){vf=1;window.pg=!!S.last_trade_paper}lt=S.last_trade_ts;if(first){S.events.slice(0,5).forEach((e,i)=>pk.push({f:e.agent,to:e.to,k:-i*.3}));if(S.flagged?.length)flare=1}first=false;
 document.getElementById("bar").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="chip" style="--c:${C[k]}" onclick="openA('${k}')"><b>${NM[k]}</b> ${esc(a.activity)}</div>`).join("");
 document.getElementById("ev").innerHTML=S.events.map(evh).join("");
 document.getElementById("wait").innerHTML=(S.waiting_on_you||[]).map(w=>`<div class="w">${esc(w)}</div>`).join("")||'<div class="s">nothing — go back to sleep</div>';
 document.getElementById("queue").innerHTML=(S.queued_today||[]).map(q=>`<div class="q"><i class="s">${esc(q.time)}</i> ${esc(q.what)}</div>`).join("");
 document.getElementById("slept").innerHTML=(S.while_you_slept||[]).map(evh).join("")||'<div class="s">quiet night</div>';
-document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[S.risk_level]}">${S.risk_level.toUpperCase()}</b></div>`;
+document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b>${b.paper?' <span style="color:#79c0ff;border:1px solid #79c0ff;padding:0 4px;font-size:10px">PAPER</span>':""} <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[S.risk_level]}">${S.risk_level.toUpperCase()}</b></div>`;
 document.getElementById("dump").innerHTML=S.dumpster.map(d=>`<div><b>${esc(d.coin)}</b><br><span class="s">${esc(d.reason)}</span></div>`).join("");
 document.getElementById("t").textContent="LIVE · "+new Date().toLocaleTimeString()}catch(e){document.getElementById("t").textContent="RECONNECTING"}}
 rs();requestAnimationFrame(draw);poll();setInterval(poll,1000);

@@ -219,7 +219,7 @@ const LB={};const lbl=document.getElementById("labels");for(const k in CREW){con
 const ray=new THREE.Raycaster();let down=null;R.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];idle=0});R.domElement.addEventListener("pointerup",e=>{if(!down)return;if(Math.hypot(e.clientX-down[0],e.clientY-down[1])<6){const r=R.domElement.getBoundingClientRect();const m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);const h=ray.intersectObjects(scene.children,true)[0];if(h){let best=null,bd=1e9;for(const k in CREW){const p=cpos(k);const dd=Math.hypot(h.point.x-p.x,h.point.z-p.z);if(dd<bd){bd=dd;best=k}}if(bd<16)openA(best)}}down=null});
 ctl.addEventListener("start",()=>idle=0);
 // ---------- state
-let S={},seen=new Set(),first=true,lastTrade=null,vaultGlow=0,idle=99,risk="green";
+let paperGlow=false,S={},seen=new Set(),first=true,lastTrade=null,vaultGlow=0,idle=99,risk="green";
 const clock=new THREE.Clock();let fpsT=0,fpsN=0;
 function tick(){const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;idle+=dt;
 // adaptive pixel ratio
@@ -255,7 +255,7 @@ const b=crew.bro.signal,red=risk=="red";b.coneMat.uniforms.col.value.set(red?0xf
 const dir=new THREE.Vector3(0,1,0).applyEuler(b.sig.rotation);b.emb.position.copy(b.lamp.position).addScaledVector(dir,170);b.emb.lookAt(b.lamp.position);
 const A=crew.advisor;const rc={green:0x3fb950,yellow:0xd29922,red:0xf85149}[risk];A.risk.material.color.set(rc);A.rl.color.set(rc);A.rl.intensity=(PHONE?40:80)*(red?(1+Math.sin(t*6)):1);A.faceMat.color.set(0xff2a2a).multiplyScalar(.75+.25*Math.sin(t*1.3));
 const now=new Date();const hrs=(now.getHours()%12+now.getMinutes()/60)/12*6.283,mins=now.getMinutes()/60*6.283;A.hands.forEach(([p],i)=>{p.children[0].parent.rotation.z=-(i%2?mins:hrs)});
-const Pl=crew.player;vaultGlow=Math.max(0,vaultGlow-dt*.25);Pl.vaultMat.color.setRGB(.06+vaultGlow*.2,.23+vaultGlow*.77,.11+vaultGlow*.2);Pl.vl.intensity=vaultGlow*120;Pl.arrows.children.forEach((a,i)=>{a.position.y=Math.sin(t*2+i)*.4});
+const Pl=crew.player;vaultGlow=Math.max(0,vaultGlow-dt*.25);if(paperGlow){Pl.vaultMat.color.setRGB(.06+vaultGlow*.35,.23+vaultGlow*.45,.11+vaultGlow*.89*(0.8+0.2*Math.sin(t*3)));Pl.vl.color.set(0x79c0ff)}else{Pl.vaultMat.color.setRGB(.06+vaultGlow*.2,.23+vaultGlow*.77,.11+vaultGlow*.2);Pl.vl.color.set(0x3fb950)}Pl.vl.intensity=vaultGlow*120;Pl.arrows.children.forEach((a,i)=>{a.position.y=Math.sin(t*2+i)*.4});
 const Tg=crew["trench dig"];Tg.dig.visible=true;if(S.scanning){Tg.shov.rotation.z=Math.sin(t*4)*.9;Tg.dig.rotation.x=Math.sin(t*4)*.08}else{Tg.shov.rotation.z=.3}
 Tg.fire.scale.y=1+Math.sin(t*20)*.2;Tg.fl.intensity=(PHONE?20:40)*(.8+Math.random()*.3);
 if(Tg.flareT>=0){Tg.flareT+=dt;const k=Tg.flareT;const p=cpos("trench dig");Tg.flare.visible=true;Tg.flare.position.set(p.x-5,4+k*22-k*k*2.2,p.z+5);Tg.flL.position.copy(Tg.flare.position);Tg.flL.intensity=PHONE?150:300;if(k>9){Tg.flareT=-1;Tg.flare.visible=false;Tg.flL.intensity=0}}
@@ -270,7 +270,7 @@ tick();
 function setArrows(bags){const g=crew.player.arrows;while(g.children.length)g.remove(g.children[0]);(bags||[]).forEach((b,i)=>{const up=b.pnl_direction=="up",fl=b.pnl_direction=="flat";const m=new THREE.Mesh(new THREE.ConeGeometry(1.1,2.4,4),new THREE.MeshBasicMaterial({color:fl?0x8b949e:up?0x3fb950:0xf85149}));if(!up&&!fl)m.rotation.x=Math.PI;m.position.x=(i-(bags.length-1)/2)*3.2;g.add(m)})}
 // ---------- UI
 const esc=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${esc(e.text)}</div>`;
+const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${e.paper?'<span style="color:#79c0ff"> ◇</span>':""}${esc(e.text)}</div>`;
 function office(k){const o=document.createElement("canvas");o.id="office";o.width=160;o.height=45;const q=o.getContext("2d"),c=C[k];q.fillStyle="#0d131b";q.fillRect(0,0,160,45);q.fillStyle="#1a2330";q.fillRect(0,34,160,11);q.fillStyle="#0b1019";q.fillRect(110,6,40,20);for(let i=0;i<5;i++){q.fillStyle="#e3b34155";q.fillRect(113+i*7,9+(i%2)*6,3,4)}q.fillStyle="#2b3440";q.fillRect(40,24,40,4);q.fillRect(44,28,3,6);q.fillRect(73,28,3,6);q.fillStyle="#58a6ff55";q.fillRect(52,14,16,10);q.fillStyle=c;q.fillRect(28,16,6,6);q.fillRect(27,22,8,10);q.fillStyle="#9fb3c8";for(let i=0;i<12;i++)q.fillRect((i*37)%110,(i*13)%30,1,3);return o}
 window.openA=function(k){const a=S.agents?.[k];if(!a)return;const m=document.getElementById("mp");m.style.setProperty("--c",C[k]);
 m.innerHTML=`<span class="x" id="cx">close</span><h2 style="color:${C[k]}">${NM[k].toUpperCase()} · ${esc(a.role).toUpperCase()}</h2><div class="s">${esc(a.where)} · updated ${esc(a.updated)}</div><div id="ofs"></div><div>${esc(a.activity)}</div><h3>RECENT</h3>${(S.events||[]).filter(e=>e.agent==k).map(evh).join("")||'<div class="s">nothing yet</div>'}`;
@@ -279,14 +279,14 @@ idle=0;const p=cpos(k);ctl.target.set(p.x,crew[k].top*.6,p.z)}
 document.getElementById("modal").onclick=e=>{if(e.target.id=="modal")e.target.style.display="none"};
 async function poll(){try{const r=await fetch("../status.json?"+Date.now(),{cache:"no-store"});S=await r.json();risk=S.risk_level||"green";
 for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first){sendPacket(e.agent,e.to);if(e.kind=="flag")crew["trench dig"].flareT=0}}}
-if(lastTrade&&S.last_trade_ts!==lastTrade)vaultGlow=1;lastTrade=S.last_trade_ts;
+if(lastTrade&&S.last_trade_ts!==lastTrade){vaultGlow=1;paperGlow=!!S.last_trade_paper}lastTrade=S.last_trade_ts;
 if(first){S.events.slice(0,6).forEach((e,i)=>sendPacket(e.agent,e.to,i*.5));if(S.flagged?.length)crew["trench dig"].flareT=0;setArrows(S.bags)}else if(JSON.stringify(S.bags)!==poll.lb)setArrows(S.bags);poll.lb=JSON.stringify(S.bags);first=false;
 document.getElementById("bar").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="chip" style="--c:${C[k]}" onclick="openA('${k}')"><b>${NM[k]}</b> ${esc(a.activity)}</div>`).join("");
 document.getElementById("ev").innerHTML=S.events.map(evh).join("");
 document.getElementById("wait").innerHTML=(S.waiting_on_you||[]).map(w=>`<div class="w">${esc(w)}</div>`).join("")||'<div class="s">nothing — go back to sleep</div>';
 document.getElementById("queue").innerHTML=(S.queued_today||[]).map(q=>`<div class="q"><i class="s">${esc(q.time)}</i> ${esc(q.what)}</div>`).join("");
 document.getElementById("slept").innerHTML=(S.while_you_slept||[]).map(evh).join("")||'<div class="s">quiet night</div>';
-document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[risk]}">${risk.toUpperCase()}</b></div>`;
+document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b>${b.paper?' <span style="color:#79c0ff;border:1px solid #79c0ff;padding:0 4px;font-size:10px">PAPER</span>':""} <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[risk]}">${risk.toUpperCase()}</b></div>`;
 document.getElementById("dump").innerHTML=S.dumpster.map(d=>`<div><b>${esc(d.coin)}</b><br><span class="s">${esc(d.reason)}</span></div>`).join("");
 document.getElementById("t").textContent="LIVE · "+new Date().toLocaleTimeString()}catch(e){document.getElementById("t").textContent="RECONNECTING"}}
 poll();setInterval(poll,1000);
