@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project MILLION · Agent City</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07090c;color:#c9d1d9;font:14px/1.45 ui-monospace,Menlo,monospace}
+header{padding:14px 18px;border-bottom:1px solid #1c232c;display:flex;justify-content:space-between;align-items:center;background:rgba(5,7,10,.85)}
+h1{margin:0;font-size:16px;letter-spacing:5px;color:#e6edf3}a{color:#7d8590}.s{color:#5b6673;font-size:12px}
+#wrap{display:grid;gap:12px;padding:12px}
+#scene{position:relative;width:100%;aspect-ratio:3/4;border:1px solid #1c232c;overflow:hidden;background:#05070a}
+canvas{width:100%;height:100%;display:block}
+.p{background:rgba(10,13,18,.9);border:1px solid #1c232c;padding:14px}.p h2{margin:0 0 8px;font-size:11px;letter-spacing:3px;color:#7d8590}
+.cards{display:grid;gap:10px;grid-template-columns:1fr}
+.card{padding:14px;border:1px solid #1c232c;background:#0d1117;border-left:3px solid var(--c)}
+.card b{color:#e6edf3;font-size:15px}.card .r{color:var(--c);font-size:11px;letter-spacing:2px}.card .a{margin:6px 0 2px}
+.up{color:#3fb950}.dn{color:#f85149}.ev{border-bottom:1px solid #141a21;padding:6px 0}.ev i{color:#5b6673;font-style:normal}
+.dump div{padding:4px 0;border-bottom:1px dashed #1c232c}.lvl{font-weight:bold}
+@media(min-width:900px){#wrap{grid-template-columns:260px 1fr 300px;grid-template-areas:"l s r" "l e r"}#scene{grid-area:s;aspect-ratio:16/9}
+.cards{grid-area:l;align-content:start}#side{grid-area:r}#evp{grid-area:e}}
+</style></head><body>
+<header><h1>AGENT CITY</h1><span class="s"><a href="../">dashboard</a> · <span id="t">CONNECTING</span></span></header>
+<div id="wrap"><div id="scene"><canvas id="c"></canvas></div>
+<div class="cards" id="cards"></div>
+<div class="p" id="evp"><h2>WIRE TRAFFIC</h2><div id="ev"></div></div>
+<div id="side" style="display:grid;gap:12px;align-content:start">
+<div class="p"><h2>CLOCKTOWER · RISK</h2><div id="risk"></div></div>
+<div class="p"><h2>VAULT · BAGS</h2><div id="bags"></div></div>
+<div class="p"><h2>DUMPSTER</h2><div class="dump" id="dump"></div></div></div></div>
+<script>
+const C={bro:"#58a6ff","trench dig":"#d29922",advisor:"#a371f7",player:"#3fb950"};
+const cv=document.getElementById("c"),x=cv.getContext("2d");let W,H,S={},seen=new Set(),beams=[],first=true,vaultFlash=0,lastTrade=null,flare=0;
+const drops=Array.from({length:160},()=>({x:Math.random(),y:Math.random(),v:.6+Math.random()*.6}));
+let bgB=[];function rs(){const r=cv.getBoundingClientRect();W=cv.width=r.width*devicePixelRatio;H=cv.height=r.height*devicePixelRatio;
+bgB=Array.from({length:22},(_,i)=>({x:i/22,w:.03+Math.random()*.04,h:.25+Math.random()*.35}))}addEventListener("resize",rs);
+// building positions (fractions)
+const P=()=>W>H?{bro:[.18,.30],advisor:[.42,.12],player:[.66,.42],"trench dig":[.88,.80]}:{bro:[.22,.28],advisor:[.55,.10],player:[.80,.42],"trench dig":[.30,.86]};
+function bld(px,w,top,col,lab){x.fillStyle="#0b0f15";x.fillRect(px-w/2,top,w,H-top);x.strokeStyle=col+"55";x.strokeRect(px-w/2,top,w,H-top);
+for(let yy=top+10;yy<H-10;yy+=14*devicePixelRatio)for(let xx=px-w/2+6;xx<px+w/2-6;xx+=10*devicePixelRatio)if((xx*7+yy*3|0)%5==0&&Math.random()>.02){x.fillStyle="#e3b34155";x.fillRect(xx,yy,4,6)}
+x.fillStyle=col;x.font=`${10*devicePixelRatio}px monospace`;x.textAlign="center";x.fillText(lab,px,top-6*devicePixelRatio)}
+function fig(px,py,col,t,dig){const b=Math.sin(t/200)*3;x.fillStyle=col;x.beginPath();x.arc(px,py-14+b,4*devicePixelRatio,0,7);x.fill();x.fillRect(px-2,py-10+b,4*devicePixelRatio,10*devicePixelRatio);
+if(dig){x.strokeStyle=col;x.lineWidth=2;x.beginPath();x.moveTo(px+6,py-6);x.lineTo(px+14,py+Math.sin(t/120)*8);x.stroke()}}
+function draw(t){const p=P(),d=devicePixelRatio,lv=S.risk_level||"green";
+const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0a0e16");g.addColorStop(1,"#05070a");x.fillStyle=g;x.fillRect(0,0,W,H);
+// searchlights
+for(const [o,s] of [[.1,1],[.9,-1]]){const a=-Math.PI/2+Math.sin(t/2500*s)*.6;x.save();x.translate(W*o,H);x.rotate(a);const lg=x.createLinearGradient(0,0,H*1.2,0);lg.addColorStop(0,"#ffffff22");lg.addColorStop(1,"#ffffff00");x.fillStyle=lg;x.beginPath();x.moveTo(0,0);x.lineTo(H*1.2,-60*d);x.lineTo(H*1.2,60*d);x.fill();x.restore()}
+// bat signal on red
+if(lv=="red"){x.fillStyle=`rgba(248,81,73,${.25+.15*Math.sin(t/300)})`;x.beginPath();x.ellipse(W*.5,H*.08,50*d,22*d,0,0,7);x.fill();x.fillStyle="#05070a";x.font=`bold ${14*d}px monospace`;x.textAlign="center";x.fillText("STOP",W*.5,H*.08+5*d)}
+// skyline bg
+for(const b of bgB){x.fillStyle="#0d121a";x.fillRect(b.x*W,H*(1-b.h),b.w*W,H*b.h)}
+// sirens
+x.fillStyle=`rgba(${Math.sin(t/250)>0?"248,81,73":"88,166,255"},.12)`;x.fillRect(0,H*.88,W,H*.12);
+const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"}[lv];
+bld(p.advisor[0]*W,W*.12,p.advisor[1]*H+20*d,C.advisor,"CLOCKTOWER");
+x.fillStyle=L;x.beginPath();x.arc(p.advisor[0]*W,p.advisor[1]*H+40*d,9*d,0,7);x.fill();
+bld(p.bro[0]*W,W*.14,p.bro[1]*H+20*d,C.bro,"WATCHTOWER");
+bld(p.player[0]*W,W*.16,p.player[1]*H+20*d,C.player,"VAULT");
+if(vaultFlash>0){x.fillStyle=`rgba(63,185,80,${vaultFlash})`;x.fillRect(p.player[0]*W-W*.08,p.player[1]*H+20*d,W*.16,30*d);vaultFlash-=.005}
+// alley / dumpster
+const ty=p["trench dig"][1]*H;x.fillStyle="#1a1f26";x.fillRect(p["trench dig"][0]*W-40*d,ty-4*d,26*d,16*d);x.fillStyle="#8b949e";x.font=`${8*d}px monospace`;x.textAlign="center";x.fillText("DUMP "+(S.dumpster||[]).length,p["trench dig"][0]*W-27*d,ty-8*d);x.fillStyle=C["trench dig"];x.fillText("ALLEYS",p["trench dig"][0]*W+20*d,ty+24*d);
+if(flare>0){x.fillStyle=`rgba(210,153,34,${flare})`;x.beginPath();x.arc(p["trench dig"][0]*W,ty-flare*H*.4,6*d,0,7);x.fill();flare-=.004}
+// figures
+for(const k in p){const [fx,fy]=p[k];const yy=k=="trench dig"?ty+10*d:fy*H+20*d;fig(fx*W+Math.sin(t/1500+fx*9)*8*d,yy,C[k],t,k=="trench dig"&&S.scanning)}
+// beams
+beams=beams.filter(b=>b.k<1);for(const b of beams){b.k+=.008;const a=p[b.f],c=p[b.to]||p.bro;if(!a)continue;const ax=a[0]*W,ay=a[1]*H+20*d,cx=c[0]*W,cy=c[1]*H+20*d,mx=(ax+cx)/2,my=Math.min(ay,cy)-80*d,k=b.k,
+bx=(1-k)*(1-k)*ax+2*(1-k)*k*mx+k*k*cx,by=(1-k)*(1-k)*ay+2*(1-k)*k*my+k*k*cy;x.strokeStyle=C[b.f]+"33";x.lineWidth=1;x.beginPath();x.moveTo(ax,ay);x.quadraticCurveTo(mx,my,cx,cy);x.stroke();
+x.fillStyle=C[b.f];x.shadowColor=C[b.f];x.shadowBlur=12;x.beginPath();x.arc(bx,by,4*d,0,7);x.fill();x.shadowBlur=0}
+if(Math.random()<.01&&S.events?.length){const e=S.events[Math.random()*S.events.length|0];beams.push({f:e.agent,to:e.to,k:0})}
+// rain
+x.strokeStyle="#9fb3c833";x.lineWidth=1;for(const r of drops){r.y+=.012*r.v;if(r.y>1)r.y=0;x.beginPath();x.moveTo(r.x*W,r.y*H);x.lineTo(r.x*W-2,r.y*H+10*d);x.stroke()}
+requestAnimationFrame(draw)}
+const esc=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+async function poll(){try{const r=await fetch("../status.json?"+Date.now());S=await r.json();
+for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first)beams.push({f:e.agent,to:e.to,k:0})}}
+if(lastTrade&&S.last_trade_ts!==lastTrade)vaultFlash=.6;lastTrade=S.last_trade_ts;
+if(first&&S.events.length)S.events.slice(0,4).forEach((e,i)=>beams.push({f:e.agent,to:e.to,k:-i*.25}));
+if(!first&&S.events[0]?.kind=="flag"&&!seen.has("f"+S.events[0].t)){seen.add("f"+S.events[0].t);flare=1}if(first&&S.flagged?.length)flare=1;first=false;
+document.getElementById("cards").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="card" style="--c:${C[k]}"><b>${k=="bro"?"Bro":esc(k)}</b> <span class="r">${esc(a.role).toUpperCase()} · ${esc(a.where)}</span><div class="a">${esc(a.activity)}</div><span class="s">updated ${esc(a.updated)}</span></div>`).join("");
+document.getElementById("ev").innerHTML=S.events.map(e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${e.agent=="bro"?"Bro":esc(e.agent)}</b> ${esc(e.text)}</div>`).join("");
+const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"};document.getElementById("risk").innerHTML=`<span class="lvl" style="color:${L[S.risk_level]}">● ${S.risk_level.toUpperCase()}</span><div class="s">${S.flagged.map(f=>"flare: "+esc(f.coin)).join("<br>")}</div>`;
+document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("");
+document.getElementById("dump").innerHTML=S.dumpster.map(d=>`<div><b>${esc(d.coin)}</b><br><span class="s">${esc(d.reason)}</span></div>`).join("");
+document.getElementById("t").textContent="LIVE · "+new Date().toLocaleTimeString()}catch(e){document.getElementById("t").textContent="RECONNECTING"}}
+rs();requestAnimationFrame(draw);poll();setInterval(poll,3000);
+</script></body></html>

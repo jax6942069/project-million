@@ -1,0 +1,227 @@
+{
+ "risk_level": "yellow",
+ "bags": [
+  {
+   "coin": "TM",
+   "type": "lotto",
+   "pnl_direction": "down",
+   "mc": "303K MC"
+  },
+  {
+   "coin": "CLAUDIA",
+   "type": "lotto",
+   "pnl_direction": "down",
+   "mc": "4.05M MC"
+  },
+  {
+   "coin": "CATE",
+   "type": null,
+   "pnl_direction": "down",
+   "mc": "52.79M MC"
+  }
+ ],
+ "last_trade_ts": "2026-10-13T01:15:00-05:00",
+ "scanning": true,
+ "flagged": [
+  {
+   "coin": "VRAX (Solana)",
+   "result": "Advisor passed: +1000% from launch, bundles reportedly hold ~35%",
+   "time": "3:22 AM CT"
+  },
+  {
+   "coin": "CHONKIE",
+   "result": "Rugged ~91%; jax exited break-even first",
+   "time": null
+  }
+ ],
+ "dumpster": [
+  {
+   "coin": "STREAM LARP",
+   "reason": "Not official @streamoors CA; already +1100%; LP unlocked"
+  },
+  {
+   "coin": "Scallywags",
+   "reason": "Dev sold out; liquidity under 50K"
+  },
+  {
+   "coin": "Silicon Inu",
+   "reason": "Liquidity under 50K, dead volume"
+  },
+  {
+   "coin": "YURU",
+   "reason": "Creator holds 89% of supply, liquidity unlocked"
+  },
+  {
+   "coin": "Ryan (KakaoTalk lion)",
+   "reason": "Unofficial mascot clones, liquidity unlocked"
+  },
+  {
+   "coin": "DOGE (Grok Efficiency)",
+   "reason": "Crashed early; micro cap"
+  },
+  {
+   "coin": "VRAX (Robinhood Chain)",
+   "reason": "Up ~1,400% in a day, copycat contracts"
+  },
+  {
+   "coin": "ETHINU",
+   "reason": "Already ran ~30x, liquidity under 50K"
+  },
+  {
+   "coin": "$MUNK",
+   "reason": "Wallet-collecting airdrop spam, likely scam"
+  },
+  {
+   "coin": "SECRETFROG",
+   "reason": "3 days old, not a fresh launch"
+  }
+ ],
+ "agents": {
+  "bro": {
+   "role": "Overseer",
+   "where": "rooftop watchtower",
+   "activity": "watching $STREAM, Milton rat coin; next: market brief 8:22 AM CT",
+   "updated": "4:10 AM CT"
+  },
+  "trench dig": {
+   "role": "Scout",
+   "where": "alleys & docks",
+   "activity": "digging the trenches — 10 in the dumpster",
+   "updated": "4:13 AM CT"
+  },
+  "advisor": {
+   "role": "Risk",
+   "where": "clocktower",
+   "activity": "risk YELLOW: TM yellow, CLAUDIA green, CATE red",
+   "updated": "4:01 AM CT"
+  },
+  "player": {
+   "role": "Trader",
+   "where": "the vault",
+   "activity": "holding TM, CLAUDIA, CATE; last move: sold CHONKIE at 33K MC",
+   "updated": "4:01 AM CT"
+  }
+ },
+ "events": [
+  {
+   "t": "2026-10-13T04:13:00-05:00",
+   "time": "4:13 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged VRAX (Solana) to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:13:00-05:00",
+   "time": "4:13 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged CHONKIE to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:13:00-05:00",
+   "time": "4:13 AM CT",
+   "agent": "trench dig",
+   "kind": "scan",
+   "text": "dug 12 tokens, 10 dumped, 2 flagged",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T04:10:00-05:00",
+   "time": "4:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: SCOOTERINU (@ScooterInu 232 followers, launch Oct 13 16:00 UTC, ~27 impressions; too small)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T04:10:00-05:00",
+   "time": "4:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: DOGE (already launched on pump.fun (bot signal post), not pre-launch; skip)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T04:10:00-05:00",
+   "time": "4:10 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T04:01:00-05:00",
+   "time": "4:01 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T02:42:00-05:00",
+   "time": "2:42 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: CHIMP (Metaplex Bootstrap public sale / DeFi utility (Mojo AI), not a memecoin; coordinat…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T02:10:00-05:00",
+   "time": "2:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: DOJAK ('fair-launch 15:00 UTC Oct 13' via @doge_wojak_meme (53.9k followers but only 5 tw…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T01:38:00-05:00",
+   "time": "1:38 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: QUEEN (AI-agent token launching Oct 13 15:00 UTC on Robinhood Chain via @ponsdotfamily; @…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T01:38:00-05:00",
+   "time": "1:38 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: GSI (8-follower account, 'launching today 3PM'; noise)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T01:15:00-05:00",
+   "time": "1:15 AM CT",
+   "agent": "player",
+   "kind": "trade",
+   "text": "sold CHONKIE at 33K MC",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T01:10:00-05:00",
+   "time": "1:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: MSGA (generic politifi site says launching tomorrow but tiny MSGA already live on pump ~;…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T01:10:00-05:00",
+   "time": "1:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: iRAM (fair launch Oct 18 18:00 UTC; ~40 impressions; too small)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T01:10:00-05:00",
+   "time": "1:10 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: STILL (39 impressions; too small)",
+   "to": "trench dig"
+  }
+ ]
+}
