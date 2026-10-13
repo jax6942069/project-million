@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:43:32.192694-05:00",
+ "generated": "2026-10-13T04:44:33.934631-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "advisor: CATE is down big, watching its cut line"
@@ -23,6 +23,30 @@
   }
  ],
  "while_you_slept": [
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged VRAX (Solana) to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged CHONKIE to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "scan",
+   "text": "dug 12 tokens, 10 dumped, 2 flagged",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T04:41:00-05:00",
    "time": "4:41 AM CT",
@@ -53,30 +77,6 @@
    "agent": "advisor",
    "kind": "pass",
    "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged VRAX (Solana) to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged CHONKIE to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "scan",
-   "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
   },
   {
@@ -171,7 +171,7 @@
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
  "last_trade_paper": false,
- "scanning": false,
+ "scanning": true,
  "flagged": [
   {
    "coin": "VRAX (Solana)",
@@ -185,6 +185,18 @@
   }
  ],
  "dumpster": [
+  {
+   "coin": "Revolut",
+   "reason": "Up ~840% on the bonding curve in 20 minutes, not an animal coin, dev wallet empty"
+  },
+  {
+   "coin": "DEEZNUTS",
+   "reason": "Down 92% in an hour, paid caller shills, liquidity under 50K"
+  },
+  {
+   "coin": "realist",
+   "reason": "Down 51% in an hour, paid callers, liquidity under 50K"
+  },
   {
    "coin": "SOL95",
    "reason": "Liquidity under 50K, not an animal coin, 12 minutes old"
@@ -212,18 +224,6 @@
   {
    "coin": "Ryan (KakaoTalk lion)",
    "reason": "Unofficial mascot clones, liquidity unlocked"
-  },
-  {
-   "coin": "DOGE (Grok Efficiency)",
-   "reason": "Crashed early; micro cap"
-  },
-  {
-   "coin": "VRAX (Robinhood Chain)",
-   "reason": "Up ~1,400% in a day, copycat contracts"
-  },
-  {
-   "coin": "ETHINU",
-   "reason": "Already ran ~30x, liquidity under 50K"
   }
  ],
  "agents": {
@@ -236,8 +236,8 @@
   "trench dig": {
    "role": "Scout",
    "where": "alleys & docks",
-   "activity": "resting between scans — 10 in the dumpster",
-   "updated": "4:25 AM CT"
+   "activity": "digging the trenches — 10 in the dumpster",
+   "updated": "4:43 AM CT"
   },
   "advisor": {
    "role": "Risk",
@@ -253,6 +253,30 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged VRAX (Solana) to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged CHONKIE to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T04:43:00-05:00",
+   "time": "4:43 AM CT",
+   "agent": "trench dig",
+   "kind": "scan",
+   "text": "dug 12 tokens, 10 dumped, 2 flagged",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T04:41:00-05:00",
    "time": "4:41 AM CT",
@@ -283,30 +307,6 @@
    "agent": "advisor",
    "kind": "pass",
    "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged VRAX (Solana) to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged CHONKIE to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T04:25:00-05:00",
-   "time": "4:25 AM CT",
-   "agent": "trench dig",
-   "kind": "scan",
-   "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
   },
   {
