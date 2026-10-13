@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T05:48:16.386504-05:00",
+ "generated": "2026-10-13T05:49:18.084561-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -154,21 +154,21 @@
    "type": "lotto",
    "paper": false,
    "pnl_direction": "down",
-   "mc": "314K MC"
+   "mc": "359K MC"
   },
   {
    "coin": "CLAUDIA",
    "type": "lotto",
    "paper": false,
    "pnl_direction": "down",
-   "mc": "3.80M MC"
+   "mc": "3.71M MC"
   },
   {
    "coin": "CATE",
    "type": null,
    "paper": false,
    "pnl_direction": "down",
-   "mc": "52.42M MC"
+   "mc": "52.74M MC"
   }
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
@@ -251,7 +251,7 @@
    "role": "Trader",
    "where": "the vault",
    "activity": "holding TM, CLAUDIA, CATE; last move: none",
-   "updated": "5:39 AM CT"
+   "updated": "5:47 AM CT"
   }
  },
  "events": [
