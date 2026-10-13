@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T07:49:20.476784-05:00",
+ "generated": "2026-10-13T07:50:22.087264-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -23,36 +23,36 @@
  ],
  "while_you_slept": [
   {
-   "t": "2026-10-13T07:47:00-05:00",
-   "time": "7:47 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
+  },
+  {
+   "t": "2026-10-13T07:47:00-05:00",
+   "time": "7:47 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
   },
   {
    "t": "2026-10-13T06:47:00-05:00",
@@ -184,44 +184,44 @@
  ],
  "dumpster": [
   {
-   "coin": "COWE",
-   "reason": "Cow meme, ~ mc / ~ liq; X callers say already 10x–13x, paid DEX push, ~211 bundler clusters — liq under and…"
+   "coin": "SEALS / Save The Seals",
+   "reason": "Cleared liq (~ mc / ~ liq) but already +1158% 6h from launch — hard skip ≥1000%; wall of paid TG callers cl…"
   },
   {
-   "coin": "The Lion",
-   "reason": "6 min old, ~ mc / ~ liq; AI-signal bots note bundle wallets hold a large slice — liq under"
-  },
-  {
-   "coin": "PUTBACK",
-   "reason": "~ mc / ~ liq, −5% 1h, no catalyst"
-  },
-  {
-   "coin": "SpaceX Jellyfish",
-   "reason": "Liq under (~) after −27% dump; viral CRS-35 catalyst but no official account"
+   "coin": "STRETCHY",
+   "reason": "Viral stretch meme, RugCheck clean, but liq ~ under bar"
   },
   {
    "coin": "YILONGMA",
-   "reason": "Liq under (~); top10 ~73%; Elon-impersonator meme"
+   "reason": "Liq ~ still under ; 13 graph insiders"
   },
   {
-   "coin": "Grimpoteuthis / dumbo octopus pack",
-   "reason": "−79% to ~; other clones micro/curve only"
+   "coin": "COWE / The Lion / Jellyfish",
+   "reason": "All dumped or under bar (COWE ~/−56%; Lion ~/ liq; Jellyfish ~/−58% — TG spam falsely claims )"
   },
   {
-   "coin": "Koinu / SEALS / Bumo / Solamians",
-   "reason": "All liq under (Koinu still on curve ~; SEALS ~; Bumo ~ + paid boosts; Solamians ~)"
+   "coin": "PUTBACK / Bumo / Solamians / Koinu",
+   "reason": "Liq under (PUTBACK ~; Bumo ~; Solamians ~; Koinu still on curve ~)"
   },
   {
    "coin": "STREAM fakes / Milton clones / $MUNK",
-   "reason": "No official STREAM CA (slipped to Oct 15); Milton unofficial only; $MUNK wallet-farm airdrop for 14:00 UTC…"
+   "reason": "No official STREAM CA (Oct 15); Milton unofficial only; $MUNK @munkdotwin still wallet-farm airdrop for 14:…"
   },
   {
-   "coin": "FiFi / FCC / SEEDLING / LARP / opc / shard",
-   "reason": "Micro or dumping; no animal catalyst / liq under bar"
+   "coin": "HUMPH / swordcat / AIRFROG / BatCat / Pumpoween",
+   "reason": "Hard skip — multi-M or old (HUMPH ~; BatCat ~ but 96d; Pumpoween ~ / 39d)"
   },
   {
-   "coin": "HUMPH / swordcat",
-   "reason": "Hard skip — multi-M / old (HUMPH ~; swordcat ~ 15d)"
+   "coin": "Grimpoteuthis / Irlcat / LARP / S&P500 FolkPepe",
+   "reason": "Micro or dumping (−92% / −11% / dead / −28%)"
+  },
+  {
+   "coin": "SpaceX Jellyfish",
+   "reason": "Liq under after dump; viral CRS-35 catalyst but no official account; TG spam fake mc"
+  },
+  {
+   "coin": "Smart wallets",
+   "reason": "Still none listed in trench-scout-wallets.md"
   }
  ],
  "agents": {
@@ -235,7 +235,7 @@
    "role": "Scout",
    "where": "alleys & docks",
    "activity": "digging the trenches — 10 in the dumpster",
-   "updated": "7:36 AM CT"
+   "updated": "7:48 AM CT"
   },
   "advisor": {
    "role": "Risk",
@@ -252,36 +252,36 @@
  },
  "events": [
   {
-   "t": "2026-10-13T07:47:00-05:00",
-   "time": "7:47 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T07:36:00-05:00",
-   "time": "7:36 AM CT",
+   "t": "2026-10-13T07:48:00-05:00",
+   "time": "7:48 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
+  },
+  {
+   "t": "2026-10-13T07:47:00-05:00",
+   "time": "7:47 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
   },
   {
    "t": "2026-10-13T06:47:00-05:00",
