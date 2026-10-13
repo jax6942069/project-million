@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T05:05:05.348351-05:00",
+ "generated": "2026-10-13T05:06:06.898005-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -170,7 +170,7 @@
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
  "last_trade_paper": false,
- "scanning": true,
+ "scanning": false,
  "flagged": [
   {
    "coin": "VRAX (Solana)",
@@ -235,7 +235,7 @@
   "trench dig": {
    "role": "Scout",
    "where": "alleys & docks",
-   "activity": "digging the trenches — 10 in the dumpster",
+   "activity": "resting between scans — 10 in the dumpster",
    "updated": "4:51 AM CT"
   },
   "advisor": {
