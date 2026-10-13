@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:37:22.498543-05:00",
+ "generated": "2026-10-13T04:38:24.102900-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "Kraken paper trading: yes or no?"
@@ -150,19 +150,19 @@
    "coin": "TM",
    "type": "lotto",
    "pnl_direction": "down",
-   "mc": "289K MC"
+   "mc": "314K MC"
   },
   {
    "coin": "CLAUDIA",
    "type": "lotto",
    "pnl_direction": "down",
-   "mc": "4.00M MC"
+   "mc": "4.15M MC"
   },
   {
    "coin": "CATE",
    "type": null,
    "pnl_direction": "down",
-   "mc": "52.25M MC"
+   "mc": "51.48M MC"
   }
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
@@ -244,7 +244,7 @@
    "role": "Trader",
    "where": "the vault",
    "activity": "holding TM, CLAUDIA, CATE; last move: sold CHONKIE at 33K MC",
-   "updated": "4:21 AM CT"
+   "updated": "4:37 AM CT"
   }
  },
  "events": [
