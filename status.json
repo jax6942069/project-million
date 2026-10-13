@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T05:16:44.430989-05:00",
+ "generated": "2026-10-13T05:17:45.929116-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -151,7 +151,7 @@
    "type": "lotto",
    "paper": false,
    "pnl_direction": "down",
-   "mc": "311K MC"
+   "mc": "306K MC"
   },
   {
    "coin": "CLAUDIA",
@@ -165,7 +165,7 @@
    "type": null,
    "paper": false,
    "pnl_direction": "down",
-   "mc": "51.66M MC"
+   "mc": "51.50M MC"
   }
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
@@ -248,7 +248,7 @@
    "role": "Trader",
    "where": "the vault",
    "activity": "holding TM, CLAUDIA, CATE; last move: sold CHONKIE at 33K MC",
-   "updated": "5:08 AM CT"
+   "updated": "5:17 AM CT"
   }
  },
  "events": [
