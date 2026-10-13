@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T06:13:05.018680-05:00",
+ "generated": "2026-10-13T06:14:06.603883-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -27,6 +27,22 @@
  ],
  "while_you_slept": [
   {
+   "t": "2026-10-13T06:13:00-05:00",
+   "time": "6:13 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: EVANS (NFL meme (Mike Evans checks Trevon Diggs nameplate), no coin demand seen on X; skip)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:13:00-05:00",
+   "time": "6:13 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
+  {
    "t": "2026-10-13T05:53:48-05:00",
    "time": "5:53 AM CT",
    "agent": "trench dig",
@@ -49,14 +65,6 @@
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
-  },
-  {
-   "t": "2026-10-13T05:43:00-05:00",
-   "time": "5:43 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
   },
   {
    "t": "2026-10-13T05:42:00-05:00",
@@ -136,14 +144,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: QUEEN (AI-agent token launching Oct 13 15:00 UTC on Robinhood Chain via @ponsdotfamily; @…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:38:00-05:00",
-   "time": "1:38 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: GSI (8-follower account, 'launching today 3PM'; noise)",
    "to": "trench dig"
   }
  ],
@@ -233,7 +233,7 @@
    "role": "Overseer",
    "where": "rooftop watchtower",
    "activity": "watching $STREAM, Milton rat coin; next: market brief 8:22 AM CT",
-   "updated": "5:43 AM CT"
+   "updated": "6:13 AM CT"
   },
   "trench dig": {
    "role": "Scout",
@@ -255,6 +255,22 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T06:13:00-05:00",
+   "time": "6:13 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: EVANS (NFL meme (Mike Evans checks Trevon Diggs nameplate), no coin demand seen on X; skip)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:13:00-05:00",
+   "time": "6:13 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
   {
    "t": "2026-10-13T05:53:48-05:00",
    "time": "5:53 AM CT",
@@ -278,14 +294,6 @@
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
-  },
-  {
-   "t": "2026-10-13T05:43:00-05:00",
-   "time": "5:43 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
   },
   {
    "t": "2026-10-13T05:42:00-05:00",
@@ -365,14 +373,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: QUEEN (AI-agent token launching Oct 13 15:00 UTC on Robinhood Chain via @ponsdotfamily; @…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:38:00-05:00",
-   "time": "1:38 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: GSI (8-follower account, 'launching today 3PM'; noise)",
    "to": "trench dig"
   }
  ]
