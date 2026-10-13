@@ -84,7 +84,7 @@ agents = {
 }
 waiting = [f"advisor: {p.get('coin')} flagged RED — down big, watching its cut line" for p in risk.get("positions", []) if p.get("flag") == "red"]
 pend, _ = load(f"{B}/pending.json")  # optional: {"items": ["..."]}
-waiting += [clean(i) for i in (pend.get("items") or ["Kraken paper trading: yes or no?"])]
+waiting += [clean(i) for i in (pend.get("items"))]
 queued = [{"time": "8:22 AM CT", "what": "Bro: market brief"}]
 for k, st in sorted((pre.get("stories") or {}).items(), key=lambda kv: str(kv[1].get("expected"))):
     e = ts(str(st.get("expected", "")).split(" ")[0])
