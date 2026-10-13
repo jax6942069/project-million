@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T05:39:01.788007-05:00",
+ "generated": "2026-10-13T05:40:03.384616-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -151,26 +151,26 @@
    "type": "lotto",
    "paper": false,
    "pnl_direction": "down",
-   "mc": "306K MC"
+   "mc": "314K MC"
   },
   {
    "coin": "CLAUDIA",
    "type": "lotto",
    "paper": false,
    "pnl_direction": "down",
-   "mc": "3.85M MC"
+   "mc": "3.80M MC"
   },
   {
    "coin": "CATE",
    "type": null,
    "paper": false,
    "pnl_direction": "down",
-   "mc": "51.50M MC"
+   "mc": "52.42M MC"
   }
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
  "last_trade_paper": false,
- "scanning": true,
+ "scanning": false,
  "flagged": [
   {
    "coin": "VRAX (Solana)",
@@ -235,7 +235,7 @@
   "trench dig": {
    "role": "Scout",
    "where": "alleys & docks",
-   "activity": "digging the trenches — 10 in the dumpster",
+   "activity": "resting between scans — 10 in the dumpster",
    "updated": "5:25 AM CT"
   },
   "advisor": {
@@ -248,7 +248,7 @@
    "role": "Trader",
    "where": "the vault",
    "activity": "holding TM, CLAUDIA, CATE; last move: sold CHONKIE at 33K MC",
-   "updated": "5:17 AM CT"
+   "updated": "5:39 AM CT"
   }
  },
  "events": [
