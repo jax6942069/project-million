@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T06:21:17.680383-05:00",
+ "generated": "2026-10-13T06:22:19.179729-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -26,6 +26,46 @@
   }
  ],
  "while_you_slept": [
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed STREAM (fake EKxfs1oZ..., 6ExD5R6n...): Fake contracts shilled by @wallytracks, not from @streamoors…",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed $JACK / MUNK: Pre-launches that farm wallets for an airdrop. Never connect a wallet. Skip.",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T06:16:00-05:00",
    "time": "6:16 AM CT",
@@ -83,30 +123,6 @@
    "to": "trench dig"
   },
   {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
-   "to": "bro"
-  },
-  {
    "t": "2026-10-13T04:10:00-05:00",
    "time": "4:10 AM CT",
    "agent": "bro",
@@ -128,22 +144,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: CHIMP (Metaplex Bootstrap public sale / DeFi utility (Mojo AI), not a memecoin; coordinat…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T02:10:00-05:00",
-   "time": "2:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: DOJAK ('fair-launch 15:00 UTC Oct 13' via @doge_wojak_meme (53.9k followers but only 5 tw…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:38:00-05:00",
-   "time": "1:38 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: QUEEN (AI-agent token launching Oct 13 15:00 UTC on Robinhood Chain via @ponsdotfamily; @…",
    "to": "trench dig"
   }
  ],
@@ -244,8 +244,8 @@
   "advisor": {
    "role": "Risk",
    "where": "clocktower",
-   "activity": "risk YELLOW: TM yellow, CLAUDIA green, CATE red",
-   "updated": "4:38 AM CT"
+   "activity": "risk YELLOW: TM green, CLAUDIA green, CATE red",
+   "updated": "6:21 AM CT"
   },
   "player": {
    "role": "Trader",
@@ -255,6 +255,46 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed STREAM (fake EKxfs1oZ..., 6ExD5R6n...): Fake contracts shilled by @wallytracks, not from @streamoors…",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T06:21:00-05:00",
+   "time": "6:21 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed $JACK / MUNK: Pre-launches that farm wallets for an airdrop. Never connect a wallet. Skip.",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T06:16:00-05:00",
    "time": "6:16 AM CT",
@@ -312,30 +352,6 @@
    "to": "trench dig"
   },
   {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:38:00-05:00",
-   "time": "4:38 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
-   "to": "bro"
-  },
-  {
    "t": "2026-10-13T04:10:00-05:00",
    "time": "4:10 AM CT",
    "agent": "bro",
@@ -357,22 +373,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: CHIMP (Metaplex Bootstrap public sale / DeFi utility (Mojo AI), not a memecoin; coordinat…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T02:10:00-05:00",
-   "time": "2:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: DOJAK ('fair-launch 15:00 UTC Oct 13' via @doge_wojak_meme (53.9k followers but only 5 tw…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:38:00-05:00",
-   "time": "1:38 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: QUEEN (AI-agent token launching Oct 13 15:00 UTC on Robinhood Chain via @ponsdotfamily; @…",
    "to": "trench dig"
   }
  ]
