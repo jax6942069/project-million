@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:31:12.953358-05:00",
+ "generated": "2026-10-13T04:32:14.513046-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "Kraken paper trading: yes or no?"
@@ -24,6 +24,30 @@
  ],
  "while_you_slept": [
   {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
+   "to": "bro"
+  },
+  {
    "t": "2026-10-13T04:25:00-05:00",
    "time": "4:25 AM CT",
    "agent": "trench dig",
@@ -45,14 +69,6 @@
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:22:00-05:00",
-   "time": "4:22 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
    "to": "bro"
   },
   {
@@ -125,22 +141,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: MSGA (generic politifi site says launching tomorrow but tiny MSGA already live on pump ~;…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:10:00-05:00",
-   "time": "1:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: iRAM (fair launch Oct 18 18:00 UTC; ~40 impressions; too small)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:10:00-05:00",
-   "time": "1:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: STILL (39 impressions; too small)",
    "to": "trench dig"
   }
  ],
@@ -238,7 +238,7 @@
    "role": "Risk",
    "where": "clocktower",
    "activity": "risk YELLOW: TM yellow, CLAUDIA green, CATE red",
-   "updated": "4:22 AM CT"
+   "updated": "4:31 AM CT"
   },
   "player": {
    "role": "Trader",
@@ -248,6 +248,30 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed RSGP: of volume on a market cap looks fake, one wallet holds 80%, and the LP is unlocked.",
+   "to": "bro"
+  },
+  {
+   "t": "2026-10-13T04:31:00-05:00",
+   "time": "4:31 AM CT",
+   "agent": "advisor",
+   "kind": "pass",
+   "text": "passed QI: Down 37% today and the same 4-wallet cluster is still holding it. Watching only.",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T04:25:00-05:00",
    "time": "4:25 AM CT",
@@ -270,14 +294,6 @@
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T04:22:00-05:00",
-   "time": "4:22 AM CT",
-   "agent": "advisor",
-   "kind": "pass",
-   "text": "passed VRAX: Up way past 1,000%, liquidity about 51K, and claims of about 35% of supply in bundled wallets.",
    "to": "bro"
   },
   {
@@ -350,22 +366,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: MSGA (generic politifi site says launching tomorrow but tiny MSGA already live on pump ~;…",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:10:00-05:00",
-   "time": "1:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: iRAM (fair launch Oct 18 18:00 UTC; ~40 impressions; too small)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T01:10:00-05:00",
-   "time": "1:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: STILL (39 impressions; too small)",
    "to": "trench dig"
   }
  ]
