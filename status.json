@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:42:30.577164-05:00",
+ "generated": "2026-10-13T04:43:32.192694-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "advisor: CATE is down big, watching its cut line"
@@ -23,6 +23,14 @@
   }
  ],
  "while_you_slept": [
+  {
+   "t": "2026-10-13T04:41:00-05:00",
+   "time": "4:41 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
   {
    "t": "2026-10-13T04:38:00-05:00",
    "time": "4:38 AM CT",
@@ -85,14 +93,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: DOGE (already launched on pump.fun (bot signal post), not pre-launch; skip)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T04:10:00-05:00",
-   "time": "4:10 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
    "to": "trench dig"
   },
   {
@@ -231,7 +231,7 @@
    "role": "Overseer",
    "where": "rooftop watchtower",
    "activity": "watching $STREAM, Milton rat coin; next: market brief 8:22 AM CT",
-   "updated": "4:10 AM CT"
+   "updated": "4:41 AM CT"
   },
   "trench dig": {
    "role": "Scout",
@@ -253,6 +253,14 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T04:41:00-05:00",
+   "time": "4:41 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
   {
    "t": "2026-10-13T04:38:00-05:00",
    "time": "4:38 AM CT",
@@ -315,14 +323,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: DOGE (already launched on pump.fun (bot signal post), not pre-launch; skip)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T04:10:00-05:00",
-   "time": "4:10 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
    "to": "trench dig"
   },
   {
