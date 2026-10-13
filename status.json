@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T06:46:36.216544-05:00",
+ "generated": "2026-10-13T06:47:36.890289-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -26,6 +26,30 @@
   }
  ],
  "while_you_slept": [
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: JELLYFISH (viral moment (Falcon 9 CRS-35 'space jellyfish' plume, US trending), already l…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: PROMPTER (16-follower AI lizard 'launching tomorrow', reply-spam; noise)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
   {
    "t": "2026-10-13T06:42:00-05:00",
    "time": "6:42 AM CT",
@@ -99,14 +123,6 @@
    "to": "trench dig"
   },
   {
-   "t": "2026-10-13T06:13:00-05:00",
-   "time": "6:13 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
    "t": "2026-10-13T05:42:00-05:00",
    "time": "5:42 AM CT",
    "agent": "bro",
@@ -128,22 +144,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: SCOOTERINU (@ScooterInu 232 followers, launch Oct 13 16:00 UTC, ~27 impressions; too small)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T04:10:00-05:00",
-   "time": "4:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: DOGE (already launched on pump.fun (bot signal post), not pre-launch; skip)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T02:42:00-05:00",
-   "time": "2:42 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: CHIMP (Metaplex Bootstrap public sale / DeFi utility (Mojo AI), not a memecoin; coordinat…",
    "to": "trench dig"
   }
  ],
@@ -233,7 +233,7 @@
    "role": "Overseer",
    "where": "rooftop watchtower",
    "activity": "watching $STREAM, Milton rat coin; next: market brief 8:22 AM CT",
-   "updated": "6:13 AM CT"
+   "updated": "6:47 AM CT"
   },
   "trench dig": {
    "role": "Scout",
@@ -255,6 +255,30 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: JELLYFISH (viral moment (Falcon 9 CRS-35 'space jellyfish' plume, US trending), already l…",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "alert",
+   "text": "pre-launch watch: PROMPTER (16-follower AI lizard 'launching tomorrow', reply-spam; noise)",
+   "to": "trench dig"
+  },
+  {
+   "t": "2026-10-13T06:47:00-05:00",
+   "time": "6:47 AM CT",
+   "agent": "bro",
+   "kind": "check",
+   "text": "ran pre-launch sweep",
+   "to": "trench dig"
+  },
   {
    "t": "2026-10-13T06:42:00-05:00",
    "time": "6:42 AM CT",
@@ -328,14 +352,6 @@
    "to": "trench dig"
   },
   {
-   "t": "2026-10-13T06:13:00-05:00",
-   "time": "6:13 AM CT",
-   "agent": "bro",
-   "kind": "check",
-   "text": "ran pre-launch sweep",
-   "to": "trench dig"
-  },
-  {
    "t": "2026-10-13T05:42:00-05:00",
    "time": "5:42 AM CT",
    "agent": "bro",
@@ -357,22 +373,6 @@
    "agent": "bro",
    "kind": "alert",
    "text": "pre-launch watch: SCOOTERINU (@ScooterInu 232 followers, launch Oct 13 16:00 UTC, ~27 impressions; too small)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T04:10:00-05:00",
-   "time": "4:10 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: DOGE (already launched on pump.fun (bot signal post), not pre-launch; skip)",
-   "to": "trench dig"
-  },
-  {
-   "t": "2026-10-13T02:42:00-05:00",
-   "time": "2:42 AM CT",
-   "agent": "bro",
-   "kind": "alert",
-   "text": "pre-launch watch: CHIMP (Metaplex Bootstrap public sale / DeFi utility (Mojo AI), not a memecoin; coordinat…",
    "to": "trench dig"
   }
  ]
