@@ -70,7 +70,7 @@ for k, s in (pre.get("stories") or {}).items():
     add(ts(s.get("first_seen")), "bro", "alert", f"pre-launch watch: {k.split('-')[0]} ({s.get('status')})", "trench dig")
 lr = ts(pre.get("last_run"))
 add(lr, "bro", "check", "ran pre-launch sweep", "trench dig")
-ev.sort(key=lambda e: e["t"], reverse=True); ev = ev[:15]
+ev.sort(key=lambda e: e["t"], reverse=True); allev = ev; ev = ev[:15]
 def latest(a): return next((e for e in ev if e["agent"] == a), None)
 w = sc.get("watching", [])
 agents = {
@@ -79,7 +79,18 @@ agents = {
  "advisor": {"role": "Risk", "where": "clocktower", "activity": f"risk {risk_level.upper()}: " + ", ".join(f"{p.get('coin')} {p.get('flag')}" for p in risk.get("positions", [])), "updated": ct(ts(risk.get("updated")) or mt(rm))},
  "player": {"role": "Trader", "where": "the vault", "activity": f"holding {', '.join(b['coin'] for b in bags)}; last move: " + (latest("player")["text"] if latest("player") else "none"), "updated": ct(ts(led.get("updated")) or mt(lm))},
 }
-out = {"risk_level": risk_level, "bags": bags, "last_trade_ts": last_trade.isoformat() if last_trade else None,
+waiting = [f"advisor: {p.get('coin')} flagged RED — down big, watching its cut line" for p in risk.get("positions", []) if p.get("flag") == "red"]
+pend, _ = load(f"{B}/pending.json")  # optional: {"items": ["..."]}
+waiting += [clean(i) for i in (pend.get("items") or ["Kraken paper trading: yes or no?"])]
+queued = [{"time": "8:22 AM CT", "what": "Bro: market brief"}]
+for k, st in sorted((pre.get("stories") or {}).items(), key=lambda kv: str(kv[1].get("expected"))):
+    e = ts(str(st.get("expected", "")).split(" ")[0])
+    if e and e.date() == now.date() and not st.get("launch_posted") and e > now - dt.timedelta(hours=1):
+        queued.append({"time": ct(e), "what": f"trench dig: {k.split('-')[0]} launch watch"})
+queued.append({"time": "Oct 14, 7:30 AM CT", "what": "Bro: CPI alert"})
+night0 = now.replace(hour=0, minute=0, second=0, microsecond=0)
+slept = [e for e in allev if e["t"] >= night0.isoformat() and e["t"] < now.replace(hour=8, minute=0).isoformat()]
+out = {"generated": now.isoformat(), "waiting_on_you": waiting, "queued_today": queued, "while_you_slept": slept[:15], "risk_level": risk_level, "bags": bags, "last_trade_ts": last_trade.isoformat() if last_trade else None,
        "scanning": scanning, "flagged": flagged, "dumpster": dumpster, "agents": agents, "events": ev}
 blob = json.dumps(out, indent=1, ensure_ascii=False)
 assert not re.search(r"\$\s?\d", blob), "dollar amount leaked"

@@ -1,80 +1,104 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project MILLION · Agent City</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#07090c;color:#c9d1d9;font:14px/1.45 ui-monospace,Menlo,monospace}
-header{padding:14px 18px;border-bottom:1px solid #1c232c;display:flex;justify-content:space-between;align-items:center;background:rgba(5,7,10,.85)}
-h1{margin:0;font-size:16px;letter-spacing:5px;color:#e6edf3}a{color:#7d8590}.s{color:#5b6673;font-size:12px}
+header{padding:12px 16px;border-bottom:1px solid #1c232c;display:flex;justify-content:space-between;align-items:center;background:#05070a}
+h1{margin:0;font-size:15px;letter-spacing:5px;color:#e6edf3}a{color:#7d8590}.s{color:#5b6673;font-size:12px}
+#bar{display:flex;gap:8px;overflow-x:auto;padding:8px 12px;border-bottom:1px solid #1c232c;background:#0a0d12;scrollbar-width:none}
+.chip{flex:0 0 auto;max-width:300px;padding:6px 10px;border:1px solid #1c232c;border-left:3px solid var(--c);cursor:pointer;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip b{color:var(--c)}
 #wrap{display:grid;gap:12px;padding:12px}
-#scene{position:relative;width:100%;aspect-ratio:3/4;border:1px solid #1c232c;overflow:hidden;background:#05070a}
+#scene{position:relative;width:100%;height:62vh;min-height:420px;border:1px solid #1c232c;overflow:hidden;background:#05070a;touch-action:none;cursor:grab}
 canvas{width:100%;height:100%;display:block}
-.p{background:rgba(10,13,18,.9);border:1px solid #1c232c;padding:14px}.p h2{margin:0 0 8px;font-size:11px;letter-spacing:3px;color:#7d8590}
-.cards{display:grid;gap:10px;grid-template-columns:1fr}
-.card{padding:14px;border:1px solid #1c232c;background:#0d1117;border-left:3px solid var(--c)}
-.card b{color:#e6edf3;font-size:15px}.card .r{color:var(--c);font-size:11px;letter-spacing:2px}.card .a{margin:6px 0 2px}
+#hint{position:absolute;bottom:8px;left:10px;color:#5b6673;font-size:11px}
+.p{background:#0b0f15;border:1px solid #1c232c;padding:14px}.p h2{margin:0 0 8px;font-size:11px;letter-spacing:3px;color:#7d8590}
+.p h3{margin:12px 0 4px;font-size:11px;letter-spacing:2px;color:#e6edf3}
 .up{color:#3fb950}.dn{color:#f85149}.ev{border-bottom:1px solid #141a21;padding:6px 0}.ev i{color:#5b6673;font-style:normal}
-.dump div{padding:4px 0;border-bottom:1px dashed #1c232c}.lvl{font-weight:bold}
-@media(min-width:900px){#wrap{grid-template-columns:260px 1fr 300px;grid-template-areas:"l s r" "l e r"}#scene{grid-area:s;aspect-ratio:16/9}
-.cards{grid-area:l;align-content:start}#side{grid-area:r}#evp{grid-area:e}}
+.w{padding:8px;border:1px solid #3d1d1d;background:#140b0b;margin:4px 0}.q{padding:4px 0;border-bottom:1px dashed #1c232c}
+.dump div{padding:4px 0;border-bottom:1px dashed #1c232c}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:9}
+#modal .p{width:100%;max-width:560px;max-height:80vh;overflow:auto;border-top:3px solid var(--c)}
+#office{height:90px;margin:8px 0;image-rendering:pixelated;width:100%}
+.x{float:right;padding:6px 12px;border:1px solid #30363d;cursor:pointer}
+@media(min-width:900px){#wrap{grid-template-columns:1fr 340px}#scene{height:68vh}#side{grid-row:span 2}#modal{align-items:center}}
 </style></head><body>
 <header><h1>AGENT CITY</h1><span class="s"><a href="../">dashboard</a> · <span id="t">CONNECTING</span></span></header>
-<div id="wrap"><div id="scene"><canvas id="c"></canvas></div>
-<div class="cards" id="cards"></div>
-<div class="p" id="evp"><h2>WIRE TRAFFIC</h2><div id="ev"></div></div>
+<div id="bar"></div>
+<div id="wrap"><div id="scene"><canvas id="c"></canvas><div id="hint">tap a building · drag to pan · scroll/pinch to zoom</div></div>
 <div id="side" style="display:grid;gap:12px;align-content:start">
-<div class="p"><h2>CLOCKTOWER · RISK</h2><div id="risk"></div></div>
+<div class="p"><h2>MORNING BRIEF</h2><h3>WAITING ON YOU</h3><div id="wait"></div><h3>QUEUED TODAY</h3><div id="queue"></div><h3>WHILE YOU SLEPT</h3><div id="slept"></div></div>
 <div class="p"><h2>VAULT · BAGS</h2><div id="bags"></div></div>
-<div class="p"><h2>DUMPSTER</h2><div class="dump" id="dump"></div></div></div></div>
+<div class="p"><h2>DUMPSTER · SKIPPED</h2><div class="dump" id="dump"></div></div></div>
+<div class="p" id="evp"><h2>WIRE TRAFFIC</h2><div id="ev"></div></div></div>
+<div id="modal"><div class="p" id="mp"></div></div>
 <script>
-const C={bro:"#58a6ff","trench dig":"#d29922",advisor:"#a371f7",player:"#3fb950"};
-const cv=document.getElementById("c"),x=cv.getContext("2d");let W,H,S={},seen=new Set(),beams=[],first=true,vaultFlash=0,lastTrade=null,flare=0;
-const drops=Array.from({length:160},()=>({x:Math.random(),y:Math.random(),v:.6+Math.random()*.6}));
-let bgB=[];function rs(){const r=cv.getBoundingClientRect();W=cv.width=r.width*devicePixelRatio;H=cv.height=r.height*devicePixelRatio;
-bgB=Array.from({length:22},(_,i)=>({x:i/22,w:.03+Math.random()*.04,h:.25+Math.random()*.35}))}addEventListener("resize",rs);
-// building positions (fractions)
-const P=()=>W>H?{bro:[.18,.30],advisor:[.42,.12],player:[.66,.42],"trench dig":[.88,.80]}:{bro:[.22,.28],advisor:[.55,.10],player:[.80,.42],"trench dig":[.30,.86]};
-function bld(px,w,top,col,lab){x.fillStyle="#0b0f15";x.fillRect(px-w/2,top,w,H-top);x.strokeStyle=col+"55";x.strokeRect(px-w/2,top,w,H-top);
-for(let yy=top+10;yy<H-10;yy+=14*devicePixelRatio)for(let xx=px-w/2+6;xx<px+w/2-6;xx+=10*devicePixelRatio)if((xx*7+yy*3|0)%5==0&&Math.random()>.02){x.fillStyle="#e3b34155";x.fillRect(xx,yy,4,6)}
-x.fillStyle=col;x.font=`${10*devicePixelRatio}px monospace`;x.textAlign="center";x.fillText(lab,px,top-6*devicePixelRatio)}
-function fig(px,py,col,t,dig){const b=Math.sin(t/200)*3;x.fillStyle=col;x.beginPath();x.arc(px,py-14+b,4*devicePixelRatio,0,7);x.fill();x.fillRect(px-2,py-10+b,4*devicePixelRatio,10*devicePixelRatio);
-if(dig){x.strokeStyle=col;x.lineWidth=2;x.beginPath();x.moveTo(px+6,py-6);x.lineTo(px+14,py+Math.sin(t/120)*8);x.stroke()}}
-function draw(t){const p=P(),d=devicePixelRatio,lv=S.risk_level||"green";
-const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0a0e16");g.addColorStop(1,"#05070a");x.fillStyle=g;x.fillRect(0,0,W,H);
-// searchlights
-for(const [o,s] of [[.1,1],[.9,-1]]){const a=-Math.PI/2+Math.sin(t/2500*s)*.6;x.save();x.translate(W*o,H);x.rotate(a);const lg=x.createLinearGradient(0,0,H*1.2,0);lg.addColorStop(0,"#ffffff22");lg.addColorStop(1,"#ffffff00");x.fillStyle=lg;x.beginPath();x.moveTo(0,0);x.lineTo(H*1.2,-60*d);x.lineTo(H*1.2,60*d);x.fill();x.restore()}
-// bat signal on red
-if(lv=="red"){x.fillStyle=`rgba(248,81,73,${.25+.15*Math.sin(t/300)})`;x.beginPath();x.ellipse(W*.5,H*.08,50*d,22*d,0,0,7);x.fill();x.fillStyle="#05070a";x.font=`bold ${14*d}px monospace`;x.textAlign="center";x.fillText("STOP",W*.5,H*.08+5*d)}
-// skyline bg
-for(const b of bgB){x.fillStyle="#0d121a";x.fillRect(b.x*W,H*(1-b.h),b.w*W,H*b.h)}
-// sirens
-x.fillStyle=`rgba(${Math.sin(t/250)>0?"248,81,73":"88,166,255"},.12)`;x.fillRect(0,H*.88,W,H*.12);
-const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"}[lv];
-bld(p.advisor[0]*W,W*.12,p.advisor[1]*H+20*d,C.advisor,"CLOCKTOWER");
-x.fillStyle=L;x.beginPath();x.arc(p.advisor[0]*W,p.advisor[1]*H+40*d,9*d,0,7);x.fill();
-bld(p.bro[0]*W,W*.14,p.bro[1]*H+20*d,C.bro,"WATCHTOWER");
-bld(p.player[0]*W,W*.16,p.player[1]*H+20*d,C.player,"VAULT");
-if(vaultFlash>0){x.fillStyle=`rgba(63,185,80,${vaultFlash})`;x.fillRect(p.player[0]*W-W*.08,p.player[1]*H+20*d,W*.16,30*d);vaultFlash-=.005}
-// alley / dumpster
-const ty=p["trench dig"][1]*H;x.fillStyle="#1a1f26";x.fillRect(p["trench dig"][0]*W-40*d,ty-4*d,26*d,16*d);x.fillStyle="#8b949e";x.font=`${8*d}px monospace`;x.textAlign="center";x.fillText("DUMP "+(S.dumpster||[]).length,p["trench dig"][0]*W-27*d,ty-8*d);x.fillStyle=C["trench dig"];x.fillText("ALLEYS",p["trench dig"][0]*W+20*d,ty+24*d);
-if(flare>0){x.fillStyle=`rgba(210,153,34,${flare})`;x.beginPath();x.arc(p["trench dig"][0]*W,ty-flare*H*.4,6*d,0,7);x.fill();flare-=.004}
-// figures
-for(const k in p){const [fx,fy]=p[k];const yy=k=="trench dig"?ty+10*d:fy*H+20*d;fig(fx*W+Math.sin(t/1500+fx*9)*8*d,yy,C[k],t,k=="trench dig"&&S.scanning)}
-// beams
-beams=beams.filter(b=>b.k<1);for(const b of beams){b.k+=.008;const a=p[b.f],c=p[b.to]||p.bro;if(!a)continue;const ax=a[0]*W,ay=a[1]*H+20*d,cx=c[0]*W,cy=c[1]*H+20*d,mx=(ax+cx)/2,my=Math.min(ay,cy)-80*d,k=b.k,
-bx=(1-k)*(1-k)*ax+2*(1-k)*k*mx+k*k*cx,by=(1-k)*(1-k)*ay+2*(1-k)*k*my+k*k*cy;x.strokeStyle=C[b.f]+"33";x.lineWidth=1;x.beginPath();x.moveTo(ax,ay);x.quadraticCurveTo(mx,my,cx,cy);x.stroke();
-x.fillStyle=C[b.f];x.shadowColor=C[b.f];x.shadowBlur=12;x.beginPath();x.arc(bx,by,4*d,0,7);x.fill();x.shadowBlur=0}
-if(Math.random()<.01&&S.events?.length){const e=S.events[Math.random()*S.events.length|0];beams.push({f:e.agent,to:e.to,k:0})}
-// rain
-x.strokeStyle="#9fb3c833";x.lineWidth=1;for(const r of drops){r.y+=.012*r.v;if(r.y>1)r.y=0;x.beginPath();x.moveTo(r.x*W,r.y*H);x.lineTo(r.x*W-2,r.y*H+10*d);x.stroke()}
+const C={bro:"#58a6ff","trench dig":"#d29922",advisor:"#a371f7",player:"#3fb950"},NM={bro:"Bro","trench dig":"trench dig",advisor:"advisor",player:"player"};
+// iso grid positions (gx,gy), height, footprint
+const BL={bro:{g:[0,0],h:220,w:46,lab:"OVERSEER"},advisor:{g:[-3,-2],h:170,w:34,lab:"RISK"},player:{g:[3,-2],h:110,w:56,lab:"TRADER"},"trench dig":{g:[0,3.2],h:55,w:40,lab:"SCOUT"}};
+const fill=[];for(let i=-6;i<=6;i++)for(let j=-6;j<=6;j++){if(Math.random()<.35&&!Object.values(BL).some(b=>Math.hypot(b.g[0]-i,b.g[1]-j)<1.6))fill.push({g:[i,j],h:20+Math.random()*90,w:22+Math.random()*16,s:Math.random()})}
+fill.sort((a,b)=>(a.g[0]+a.g[1])-(b.g[0]+b.g[1]));
+const cv=document.getElementById("c"),x=cv.getContext("2d");let W,H,d=devicePixelRatio,cam={x:0,y:0,z:1},S={},seen=new Set(),pk=[],first=true,vf=0,lt=null,flare=0,hit=[];
+const drops=Array.from({length:180},()=>({x:Math.random(),y:Math.random(),v:.6+Math.random()*.6}));
+function rs(){const r=cv.getBoundingClientRect();W=cv.width=r.width*d;H=cv.height=r.height*d;cam.z=Math.min(1.3,Math.max(.55,r.width/620))}addEventListener("resize",rs);
+const iso=(gx,gy)=>[W/2+cam.x+(gx-gy)*44*d*cam.z,H*.62+cam.y+(gx+gy)*24*d*cam.z];
+function box(px,py,w,h,top,l,r,win){w*=d*cam.z;h*=d*cam.z;const hw=w/2,q=w/4;
+x.fillStyle=l;x.beginPath();x.moveTo(px-hw,py);x.lineTo(px,py+q);x.lineTo(px,py+q-h);x.lineTo(px-hw,py-h);x.fill();
+x.fillStyle=r;x.beginPath();x.moveTo(px+hw,py);x.lineTo(px,py+q);x.lineTo(px,py+q-h);x.lineTo(px+hw,py-h);x.fill();
+x.fillStyle=top;x.beginPath();x.moveTo(px,py-h-q);x.lineTo(px+hw,py-h);x.lineTo(px,py-h+q);x.lineTo(px-hw,py-h);x.fill();
+if(win){x.fillStyle=win;for(let yy=8*d;yy<h-6*d;yy+=11*d*cam.z)for(let k=.2;k<.95;k+=.25){if(((yy*13+k*97)|0)%3)continue;const wx=px-hw+k*hw,wy=py-yy+k*q;x.fillRect(wx,wy,3*d*cam.z,4*d*cam.z)}}return [px-hw,py-h-q,w,h+2*q]}
+function draw(t){const lv=S.risk_level||"green";
+const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0b1019");g.addColorStop(1,"#04060a");x.fillStyle=g;x.fillRect(0,0,W,H);
+for(const [o,s] of [[.15,1],[.85,-1]]){const a=-Math.PI/2+Math.sin(t/2600*s)*.55;x.save();x.translate(W*o,H);x.rotate(a);const lg=x.createLinearGradient(0,0,H*1.3,0);lg.addColorStop(0,"#ffffff1c");lg.addColorStop(1,"#ffffff00");x.fillStyle=lg;x.beginPath();x.moveTo(0,0);x.lineTo(H*1.3,-70*d);x.lineTo(H*1.3,70*d);x.fill();x.restore()}
+// ground grid
+x.strokeStyle="#111821";x.lineWidth=1;for(let i=-7;i<=7;i++){let[a,b]=iso(i,-7),[c,e]=iso(i,7);x.beginPath();x.moveTo(a,b);x.lineTo(c,e);x.stroke();[a,b]=iso(-7,i);[c,e]=iso(7,i);x.beginPath();x.moveTo(a,b);x.lineTo(c,e);x.stroke()}
+// siren street glow
+const sc=Math.sin(t/260)>0?"248,81,73":"88,166,255",[sx,sy]=iso(2,4.5);const rg=x.createRadialGradient(sx,sy,0,sx,sy,120*d);rg.addColorStop(0,`rgba(${sc},.25)`);rg.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=rg;x.fillRect(0,0,W,H);
+// draw buildings in depth order
+const all=[...fill.map(f=>({f})),...Object.entries(BL).map(([k,b])=>({k,b}))].sort((A,B)=>{const a=A.f?A.f.g:A.b.g,b=B.f?B.f.g:B.b.g;return a[0]+a[1]-b[0]-b[1]});
+hit=[];const tops={};
+for(const o of all){if(o.f){const[px,py]=iso(...o.f.g);box(px,py,o.f.w,o.f.h,"#141b24","#0c1118","#0f151d","#e3b34140");continue}
+const{k,b}=o,[px,py]=iso(...b.g),c=C[k];let win=c+"aa";if(k=="player"&&vf>0){win="#3fb950";vf-=.004}
+const r=box(px,py,b.w,b.h,"#1a2330","#0d131b","#111924",win);hit.push([k,...r]);tops[k]=[px,py-b.h*d*cam.z-b.w*d*cam.z/4];
+x.strokeStyle=c+"66";x.strokeRect(r[0],r[1],r[2],r[3]*0);
+if(k=="advisor"){const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"}[lv];x.fillStyle=L;x.beginPath();x.arc(px,py-b.h*d*cam.z*.8,6*d*cam.z,0,7);x.fill()}
+if(k=="trench dig"){x.fillStyle="#1f262e";x.fillRect(px+28*d*cam.z,py-6*d,22*d*cam.z,12*d*cam.z);x.fillStyle="#8b949e";x.font=`${8*d}px monospace`;x.textAlign="center";x.fillText("🗑 "+(S.dumpster||[]).length,px+39*d*cam.z,py+18*d);
+if(S.scanning){x.strokeStyle=c;x.lineWidth=2*d;const sw=Math.sin(t/140)*6*d;x.beginPath();x.moveTo(px-30*d*cam.z,py);x.lineTo(px-22*d*cam.z,py+8*d+sw);x.stroke();x.fillStyle="#3a2f1d";x.beginPath();x.arc(px-30*d*cam.z,py+12*d,5*d,0,7);x.fill()}
+if(flare>0){x.fillStyle=`rgba(210,153,34,${flare})`;x.shadowColor=c;x.shadowBlur=20;x.beginPath();x.arc(px,py-(1-flare)*220*d,5*d,0,7);x.fill();x.shadowBlur=0;flare-=.003}}}
+// hub bat-signal
+const[hx,hy]=tops.bro;x.fillStyle=lv=="red"?`rgba(248,81,73,${.5+.3*Math.sin(t/250)})`:"#e3b34199";x.beginPath();x.moveTo(hx,hy);x.lineTo(hx-40*d,hy-110*d);x.lineTo(hx+40*d,hy-110*d);x.fill();x.globalAlpha=.25;x.fillStyle=lv=="red"?"#f85149":"#e3b341";x.beginPath();x.ellipse(hx,hy-118*d,48*d,18*d,0,0,7);x.fill();x.globalAlpha=1;
+x.fillStyle="#05070a";x.beginPath();x.ellipse(hx,hy-118*d,20*d,7*d,0,0,7);x.fill();
+// sky lines + packets
+x.setLineDash([3*d,5*d]);x.lineWidth=1*d;for(const k of ["advisor","player","trench dig"]){const[a,b]=tops[k];x.strokeStyle=C[k]+"77";x.beginPath();x.moveTo(hx,hy);x.quadraticCurveTo((hx+a)/2,Math.min(hy,b)-50*d,a,b);x.stroke()}x.setLineDash([]);
+pk=pk.filter(p=>p.k<1);for(const p of pk){p.k+=.007;if(p.k<0)continue;let A=tops[p.f]||tops.bro,B=tops[p.to]||tops.bro;if(p.f!="bro"&&p.to!="bro"){B=tops.bro}
+const k=p.k,mx=(A[0]+B[0])/2,my=Math.min(A[1],B[1])-50*d,bx=(1-k)**2*A[0]+2*(1-k)*k*mx+k*k*B[0],by=(1-k)**2*A[1]+2*(1-k)*k*my+k*k*B[1];x.fillStyle=C[p.f]||"#fff";x.shadowColor=x.fillStyle;x.shadowBlur=14*d;x.beginPath();x.arc(bx,by,4*d,0,7);x.fill();x.shadowBlur=0}
+if(Math.random()<.008&&S.events?.length){const e=S.events[Math.random()*S.events.length|0];pk.push({f:e.agent,to:e.to,k:0})}
+// labels
+x.font=`${11*d}px monospace`;x.textAlign="left";for(const k in tops){const[a,b]=tops[k],lab=`${NM[k]} · ${BL[k].lab}`,tw=x.measureText(lab).width+22*d,ly=b-(k=="bro"?140:22)*d;x.fillStyle="#05070add";x.fillRect(a-tw/2,ly-13*d,tw,18*d);x.strokeStyle=C[k]+"88";x.strokeRect(a-tw/2,ly-13*d,tw,18*d);x.fillStyle=C[k];x.beginPath();x.arc(a-tw/2+9*d,ly-4*d,3.5*d,0,7);x.fill();x.fillStyle="#e6edf3";x.fillText(lab,a-tw/2+16*d,ly)}
+x.strokeStyle="#9fb3c830";x.lineWidth=1;for(const r of drops){r.y+=.012*r.v;if(r.y>1)r.y=0;x.beginPath();x.moveTo(r.x*W,r.y*H);x.lineTo(r.x*W-2*d,r.y*H+11*d);x.stroke()}
 requestAnimationFrame(draw)}
+// pan/zoom/tap
+let drag=null,moved=0,pts=new Map(),pd=0;cv.addEventListener("pointerdown",e=>{pts.set(e.pointerId,e);drag=[e.clientX,e.clientY];moved=0;cv.setPointerCapture(e.pointerId)});
+cv.addEventListener("pointermove",e=>{if(!drag)return;if(pts.size==2){pts.set(e.pointerId,e);const[a,b]=[...pts.values()],dd=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(pd)cam.z=Math.min(2.5,Math.max(.4,cam.z*dd/pd));pd=dd;moved=99;return}
+cam.x+=(e.clientX-drag[0])*d;cam.y+=(e.clientY-drag[1])*d;moved+=Math.abs(e.clientX-drag[0])+Math.abs(e.clientY-drag[1]);drag=[e.clientX,e.clientY]});
+cv.addEventListener("pointerup",e=>{pts.delete(e.pointerId);pd=0;if(moved<8){const r=cv.getBoundingClientRect(),X=(e.clientX-r.left)*d,Y=(e.clientY-r.top)*d;for(const[k,a,b,w,h]of hit.slice().reverse())if(X>a&&X<a+w&&Y>b-30*d&&Y<b+h){openA(k);break}}if(!pts.size)drag=null});
+cv.addEventListener("wheel",e=>{e.preventDefault();cam.z=Math.min(2.5,Math.max(.4,cam.z*(e.deltaY<0?1.1:.9)))},{passive:false});
 const esc=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const evh=e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${NM[e.agent]||esc(e.agent)}</b> ${esc(e.text)}</div>`;
+function office(k){const o=document.createElement("canvas");o.id="office";o.width=160;o.height=45;const q=o.getContext("2d"),c=C[k];q.fillStyle="#0d131b";q.fillRect(0,0,160,45);q.fillStyle="#1a2330";q.fillRect(0,34,160,11);
+q.fillStyle="#0b1019";q.fillRect(110,6,40,20);for(let i=0;i<5;i++){q.fillStyle="#e3b34155";q.fillRect(113+i*7,9+(i%2)*6,3,4)}q.fillStyle="#2b3440";q.fillRect(40,24,40,4);q.fillRect(44,28,3,6);q.fillRect(73,28,3,6);
+q.fillStyle="#58a6ff55";q.fillRect(52,14,16,10);q.fillStyle=c;q.fillRect(28,16,6,6);q.fillRect(27,22,8,10);q.fillStyle="#9fb3c8";for(let i=0;i<12;i++)q.fillRect((i*37)%110,(i*13)%30,1,3);return o}
+function openA(k){const a=S.agents?.[k];if(!a)return;const m=document.getElementById("mp");m.style.setProperty("--c",C[k]);
+m.innerHTML=`<span class="x" onclick="document.getElementById('modal').style.display='none'">close</span><h2 style="color:${C[k]}">${NM[k].toUpperCase()} · ${esc(a.role).toUpperCase()}</h2><div class="s">${esc(a.where)} · updated ${esc(a.updated)}</div><div id="ofs"></div><div>${esc(a.activity)}</div><h3>RECENT</h3>${(S.events||[]).filter(e=>e.agent==k).map(evh).join("")||'<div class="s">nothing yet</div>'}`;
+document.getElementById("ofs").appendChild(office(k));document.getElementById("modal").style.display="flex"}
+document.getElementById("modal").onclick=e=>{if(e.target.id=="modal")e.target.style.display="none"};
 async function poll(){try{const r=await fetch("../status.json?"+Date.now());S=await r.json();
-for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first)beams.push({f:e.agent,to:e.to,k:0})}}
-if(lastTrade&&S.last_trade_ts!==lastTrade)vaultFlash=.6;lastTrade=S.last_trade_ts;
-if(first&&S.events.length)S.events.slice(0,4).forEach((e,i)=>beams.push({f:e.agent,to:e.to,k:-i*.25}));
-if(!first&&S.events[0]?.kind=="flag"&&!seen.has("f"+S.events[0].t)){seen.add("f"+S.events[0].t);flare=1}if(first&&S.flagged?.length)flare=1;first=false;
-document.getElementById("cards").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="card" style="--c:${C[k]}"><b>${k=="bro"?"Bro":esc(k)}</b> <span class="r">${esc(a.role).toUpperCase()} · ${esc(a.where)}</span><div class="a">${esc(a.activity)}</div><span class="s">updated ${esc(a.updated)}</span></div>`).join("");
-document.getElementById("ev").innerHTML=S.events.map(e=>`<div class="ev"><i>${esc(e.time)}</i> <b style="color:${C[e.agent]}">${e.agent=="bro"?"Bro":esc(e.agent)}</b> ${esc(e.text)}</div>`).join("");
-const L={green:"#3fb950",yellow:"#d29922",red:"#f85149"};document.getElementById("risk").innerHTML=`<span class="lvl" style="color:${L[S.risk_level]}">● ${S.risk_level.toUpperCase()}</span><div class="s">${S.flagged.map(f=>"flare: "+esc(f.coin)).join("<br>")}</div>`;
-document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("");
+for(const e of S.events){const id=e.t+e.text;if(!seen.has(id)){seen.add(id);if(!first){pk.push({f:e.agent,to:e.to,k:0});if(e.kind=="flag")flare=1}}}
+if(lt&&S.last_trade_ts!==lt)vf=1;lt=S.last_trade_ts;if(first){S.events.slice(0,5).forEach((e,i)=>pk.push({f:e.agent,to:e.to,k:-i*.3}));if(S.flagged?.length)flare=1}first=false;
+document.getElementById("bar").innerHTML=Object.entries(S.agents).map(([k,a])=>`<div class="chip" style="--c:${C[k]}" onclick="openA('${k}')"><b>${NM[k]}</b> ${esc(a.activity)}</div>`).join("");
+document.getElementById("ev").innerHTML=S.events.map(evh).join("");
+document.getElementById("wait").innerHTML=(S.waiting_on_you||[]).map(w=>`<div class="w">${esc(w)}</div>`).join("")||'<div class="s">nothing — go back to sleep</div>';
+document.getElementById("queue").innerHTML=(S.queued_today||[]).map(q=>`<div class="q"><i class="s">${esc(q.time)}</i> ${esc(q.what)}</div>`).join("");
+document.getElementById("slept").innerHTML=(S.while_you_slept||[]).map(evh).join("")||'<div class="s">quiet night</div>';
+document.getElementById("bags").innerHTML=S.bags.map(b=>`<div>${b.pnl_direction=="up"?'<span class="up">▲</span>':b.pnl_direction=="down"?'<span class="dn">▼</span>':'■'} <b>${esc(b.coin)}</b> <span class="s">${esc(b.mc)}</span></div>`).join("")+`<div class="s" style="margin-top:6px">risk: <b style="color:${{green:"#3fb950",yellow:"#d29922",red:"#f85149"}[S.risk_level]}">${S.risk_level.toUpperCase()}</b></div>`;
 document.getElementById("dump").innerHTML=S.dumpster.map(d=>`<div><b>${esc(d.coin)}</b><br><span class="s">${esc(d.reason)}</span></div>`).join("");
 document.getElementById("t").textContent="LIVE · "+new Date().toLocaleTimeString()}catch(e){document.getElementById("t").textContent="RECONNECTING"}}
 rs();requestAnimationFrame(draw);poll();setInterval(poll,3000);
