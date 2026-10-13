@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T06:31:30.697975-05:00",
+ "generated": "2026-10-13T06:32:31.369507-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line"
  ],
@@ -26,6 +26,30 @@
   }
  ],
  "while_you_slept": [
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged VRAX (Solana) to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged CHONKIE to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "scan",
+   "text": "dug 12 tokens, 10 dumped, 2 flagged",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T06:21:00-05:00",
    "time": "6:21 AM CT",
@@ -64,30 +88,6 @@
    "agent": "advisor",
    "kind": "pass",
    "text": "passed $JACK / MUNK: Pre-launches that farm wallets for an airdrop. Never connect a wallet. Skip.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged VRAX (Solana) to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged CHONKIE to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "scan",
-   "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
   },
   {
@@ -173,7 +173,7 @@
  ],
  "last_trade_ts": "2026-10-13T01:15:00-05:00",
  "last_trade_paper": false,
- "scanning": false,
+ "scanning": true,
  "flagged": [
   {
    "coin": "VRAX (Solana)",
@@ -187,6 +187,10 @@
   }
  ],
  "dumpster": [
+  {
+   "coin": "SpaceX Jellyfish",
+   "reason": "Liq under (~); no official account (socials = X search link); paid DEX push, ~70% bot buyers"
+  },
   {
    "coin": "STREAM fake",
    "reason": "Random account's 'stealth launch' CA, not official @streamoors; ~ on curve"
@@ -209,7 +213,7 @@
   },
   {
    "coin": "AIRFROG",
-   "reason": "Past +1000% (6h +1692%), heavy paid DEX boosts (500), dead 1h volume"
+   "reason": "Past +1000%, heavy paid DEX boosts (500); now dead (~, −95% 1h)"
   },
   {
    "coin": "HUMPH",
@@ -222,10 +226,6 @@
   {
    "coin": "Milton clones",
    "reason": "Unofficial only; no official account CA; micro mc"
-  },
-  {
-   "coin": "$MUNK",
-   "reason": "Wallet-farm airdrop spam (launch claim 14:00 UTC) — scam-treat"
   }
  ],
  "agents": {
@@ -238,8 +238,8 @@
   "trench dig": {
    "role": "Scout",
    "where": "alleys & docks",
-   "activity": "resting between scans — 10 in the dumpster",
-   "updated": "6:16 AM CT"
+   "activity": "digging the trenches — 10 in the dumpster",
+   "updated": "6:32 AM CT"
   },
   "advisor": {
    "role": "Risk",
@@ -255,6 +255,30 @@
   }
  },
  "events": [
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged VRAX (Solana) to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "flag",
+   "text": "flagged CHONKIE to advisor",
+   "to": "advisor"
+  },
+  {
+   "t": "2026-10-13T06:32:00-05:00",
+   "time": "6:32 AM CT",
+   "agent": "trench dig",
+   "kind": "scan",
+   "text": "dug 12 tokens, 10 dumped, 2 flagged",
+   "to": "bro"
+  },
   {
    "t": "2026-10-13T06:21:00-05:00",
    "time": "6:21 AM CT",
@@ -293,30 +317,6 @@
    "agent": "advisor",
    "kind": "pass",
    "text": "passed $JACK / MUNK: Pre-launches that farm wallets for an airdrop. Never connect a wallet. Skip.",
-   "to": "bro"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged VRAX (Solana) to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "flag",
-   "text": "flagged CHONKIE to advisor",
-   "to": "advisor"
-  },
-  {
-   "t": "2026-10-13T06:16:00-05:00",
-   "time": "6:16 AM CT",
-   "agent": "trench dig",
-   "kind": "scan",
-   "text": "dug 12 tokens, 10 dumped, 2 flagged",
    "to": "bro"
   },
   {
