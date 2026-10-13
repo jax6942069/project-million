@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T04:52:46.418723-05:00",
+ "generated": "2026-10-13T04:53:47.998155-05:00",
  "waiting_on_you": [
   "advisor: CATE flagged RED — down big, watching its cut line",
   "advisor: CATE is down big, watching its cut line"
@@ -24,24 +24,24 @@
  ],
  "while_you_slept": [
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
@@ -186,44 +186,44 @@
  ],
  "dumpster": [
   {
-   "coin": "Revolut",
-   "reason": "Up ~840% on the bonding curve in 20 minutes, not an animal coin, dev wallet empty"
+   "coin": "SEALS (Save The Seals)",
+   "reason": "On bonding curve ~ mc, liq under ; 46/100 top buyers already sold"
   },
   {
-   "coin": "DEEZNUTS",
-   "reason": "Down 92% in an hour, paid caller shills, liquidity under 50K"
+   "coin": "Policecat / Officer Whiskers",
+   "reason": "Micro ~ on curve, liq under , clone wave"
   },
   {
-   "coin": "realist",
-   "reason": "Down 51% in an hour, paid callers, liquidity under 50K"
-  },
-  {
-   "coin": "SOL95",
-   "reason": "Liquidity under 50K, not an animal coin, 12 minutes old"
-  },
-  {
-   "coin": "TELEPUMP",
-   "reason": "Liquidity under 50K, no catalyst"
+   "coin": "AIRFROG",
+   "reason": "Past +1000% (6h +1691%), heavy paid DEX boosts, dead 1h volume"
   },
   {
    "coin": "STREAM LARP",
-   "reason": "Not official @streamoors CA; already +1100%; LP unlocked"
+   "reason": "Not official @streamoors; RugCheck DANGER (top10 ~94%, LP/low liq); +23k%"
   },
   {
-   "coin": "Scallywags",
-   "reason": "Dev sold out; liquidity under 50K"
+   "coin": "Revolut",
+   "reason": "Not animal; liq under ; CTO empty-dev narrative"
   },
   {
-   "coin": "Silicon Inu",
-   "reason": "Liquidity under 50K, dead volume"
+   "coin": "Bumo",
+   "reason": "Liq under (~); prior skip"
   },
   {
-   "coin": "YURU",
-   "reason": "Creator holds 89% of supply, liquidity unlocked"
+   "coin": "CHONK (wizard cat)",
+   "reason": "Liq under ; paid TG/airdrop shills"
   },
   {
-   "coin": "Ryan (KakaoTalk lion)",
-   "reason": "Unofficial mascot clones, liquidity unlocked"
+   "coin": "$MUNK",
+   "reason": "Wallet-farm airdrop spam; launch claim 14:00 UTC — scam-treat"
+  },
+  {
+   "coin": "SOL95",
+   "reason": "Dumped −73% 1h; liq under"
+  },
+  {
+   "coin": "Sola (Solana character)",
+   "reason": "On curve ~; liq under"
   }
  ],
  "agents": {
@@ -237,7 +237,7 @@
    "role": "Scout",
    "where": "alleys & docks",
    "activity": "digging the trenches — 10 in the dumpster",
-   "updated": "4:43 AM CT"
+   "updated": "4:51 AM CT"
   },
   "advisor": {
    "role": "Risk",
@@ -254,24 +254,24 @@
  },
  "events": [
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged VRAX (Solana) to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "flag",
    "text": "flagged CHONKIE to advisor",
    "to": "advisor"
   },
   {
-   "t": "2026-10-13T04:43:00-05:00",
-   "time": "4:43 AM CT",
+   "t": "2026-10-13T04:51:00-05:00",
+   "time": "4:51 AM CT",
    "agent": "trench dig",
    "kind": "scan",
    "text": "dug 12 tokens, 10 dumped, 2 flagged",
